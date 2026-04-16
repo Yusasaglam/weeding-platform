@@ -64,6 +64,7 @@ export default async function GuestAccessPage({ params }: Props) {
       albums={albums}
       mediaByAlbum={mediaByAlbum}
       supabaseUrl={process.env.NEXT_PUBLIC_SUPABASE_URL!}
+      token={token}
     />
   )
 }

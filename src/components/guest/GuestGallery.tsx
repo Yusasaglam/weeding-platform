@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Album { id: string; title: string; description: string }
 interface MediaFile { id: string; storage_path: string; file_name: string; file_type: string }
@@ -11,15 +12,47 @@ interface Props {
   albums: Album[]
   mediaByAlbum: Record<string, MediaFile[]>
   supabaseUrl: string
+  token: string
 }
 
-export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUrl }: Props) {
+export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUrl, token }: Props) {
   const [guestName, setGuestName] = useState('')
   const [nameConfirmed, setNameConfirmed] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
 
   function mediaUrl(path: string) {
     return `${supabaseUrl}/storage/v1/object/public/wedding-media/${path}`
   }
+
+  const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    if (files.length === 0) return
+
+    setUploading(true)
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      setUploadProgress(`Yükleniyor ${i + 1}/${files.length}: ${file.name}`)
+
+      const fd = new FormData()
+      fd.append('token', token)
+      fd.append('file', file)
+
+      const res = await fetch('/api/guest-upload', { method: 'POST', body: fd })
+      if (!res.ok) {
+        const err = await res.json()
+        console.error('Upload error:', err)
+      }
+    }
+
+    setUploading(false)
+    setUploadProgress(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+    router.refresh()
+  }, [token, router])
 
   if (!nameConfirmed) {
     return (
@@ -36,7 +69,7 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
               type="text"
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && guestName.trim() && setNameConfirmed(true)}
+              onKeyDown={(e) => e.key === 'Enter' && setNameConfirmed(true)}
               placeholder="Adınız (opsiyonel)"
               className="w-full px-4 py-2.5 rounded-lg border border-stone-300 text-stone-900 text-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400 transition mb-4"
             />
@@ -66,6 +99,32 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-8">
+        {/* Upload area */}
+        <div className="mb-8">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*"
+            multiple
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          {uploading ? (
+            <div className="w-full py-4 rounded-2xl border border-stone-200 bg-white text-center">
+              <p className="text-sm text-stone-500">{uploadProgress ?? 'Yükleniyor...'}</p>
+            </div>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full py-4 rounded-2xl border border-dashed border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50 text-stone-600 hover:text-stone-800 text-sm font-medium transition flex items-center justify-center gap-2"
+            >
+              <span className="text-lg">📷</span>
+              Fotoğraf / Video Yükle
+            </button>
+          )}
+        </div>
+
+        {/* Gallery */}
         {totalPhotos === 0 ? (
           <div className="text-center py-16">
             <p className="text-stone-400 text-sm">Henüz fotoğraf yok.</p>
@@ -90,9 +149,11 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
                             loading="lazy"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <span className="text-3xl">🎬</span>
-                          </div>
+                          <video
+                            src={mediaUrl(f.storage_path)}
+                            className="w-full h-full object-cover"
+                            controls
+                          />
                         )}
                       </div>
                     ))}

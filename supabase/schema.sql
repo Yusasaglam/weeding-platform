@@ -290,6 +290,11 @@ CREATE POLICY "couple: read wedding-media"
   ON storage.objects FOR SELECT
   USING (bucket_id = 'wedding-media' AND public.get_my_role() = 'couple');
 
+-- Guests can read wedding-media (URL is not guessable without token)
+CREATE POLICY "public: read wedding-media"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'wedding-media');
+
 -- Admin manages covers
 CREATE POLICY "admin: manage covers"
   ON storage.objects FOR ALL
