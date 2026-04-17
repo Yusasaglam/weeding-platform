@@ -15,8 +15,8 @@ interface Props {
   token: string
 }
 
-function getStorageKey(token: string) {
-  return `guest_uploads_${token}`
+function getStorageKey(token: string, name: string) {
+  return `guest_uploads_${token}_${name.trim().toLowerCase()}`
 }
 
 export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUrl, token }: Props) {
@@ -28,13 +28,14 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
-  // LocalStorage'dan bu cihazın yüklediği foto ID'lerini al
+  // LocalStorage'dan bu isim+token'ın yüklediği foto ID'lerini al
   useEffect(() => {
+    if (!nameConfirmed || !guestName.trim()) return
     try {
-      const stored = localStorage.getItem(getStorageKey(token))
+      const stored = localStorage.getItem(getStorageKey(token, guestName))
       if (stored) setMyUploadIds(JSON.parse(stored))
     } catch {}
-  }, [token])
+  }, [nameConfirmed, guestName, token])
 
   function mediaUrl(path: string) {
     return `${supabaseUrl}/storage/v1/object/public/wedding-media/${path}`
@@ -65,7 +66,7 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
     // Bu cihazın yüklediği ID'leri kaydet
     setMyUploadIds((prev) => {
       const updated = [...prev, ...newIds]
-      try { localStorage.setItem(getStorageKey(token), JSON.stringify(updated)) } catch {}
+      try { localStorage.setItem(getStorageKey(token, guestName), JSON.stringify(updated)) } catch {}
       return updated
     })
 
