@@ -21,22 +21,40 @@ export async function POST(req: NextRequest) {
     .single()
 
   if (!guestToken) return NextResponse.json({ error: 'Geçersiz token' }, { status: 403 })
-
   if (guestToken.expires_at && new Date(guestToken.expires_at) < new Date()) {
     return NextResponse.json({ error: 'Token süresi dolmuş' }, { status: 403 })
   }
 
-  // Hangi albüme yüklenecek
+  // Albüm bul: token'a bağlı albüm → guest albümü → yoksa otomatik oluştur
   let albumId: string | null = guestToken.album_id ?? null
+
   if (!albumId) {
-    const { data: albums } = await admin
+    const { data: existing } = await admin
       .from('albums')
       .select('id')
       .eq('wedding_id', guestToken.wedding_id)
       .eq('visibility', 'guest')
       .order('sort_order')
       .limit(1)
-    albumId = albums?.[0]?.id ?? null
+      .maybeSingle()
+
+    if (existing) {
+      albumId = existing.id
+    } else {
+      // Otomatik "Misafir Fotoğrafları" albümü oluştur
+      const { data: created } = await admin
+        .from('albums')
+        .insert({
+          wedding_id: guestToken.wedding_id,
+          title: 'Misafir Fotoğrafları',
+          description: 'Misafirler tarafından yüklenen fotoğraflar',
+          visibility: 'guest',
+          sort_order: 999,
+        })
+        .select('id')
+        .single()
+      albumId = created?.id ?? null
+    }
   }
 
   // Dosyayı storage'a yükle

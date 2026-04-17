@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 
-interface Album { id: string; title: string; description: string }
+interface Album { id: string; title: string; description: string; is_guest_uploads: boolean }
 interface MediaFile { id: string; storage_path: string; file_name: string; file_type: string }
 interface Wedding { id: string; title: string; bride_name: string; groom_name: string; event_date: string | null; venue: string }
 
@@ -85,7 +85,10 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
     )
   }
 
-  const totalPhotos = Object.values(mediaByAlbum).reduce((s, f) => s + f.length, 0)
+  const regularAlbums = albums.filter((a) => !a.is_guest_uploads)
+  const guestUploadAlbum = albums.find((a) => a.is_guest_uploads)
+  const guestUploadFiles = guestUploadAlbum ? (mediaByAlbum[guestUploadAlbum.id] ?? []) : []
+  const regularTotal = regularAlbums.reduce((s, a) => s + (mediaByAlbum[a.id]?.length ?? 0), 0)
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -99,7 +102,7 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-8">
-        {/* Upload area */}
+        {/* Upload */}
         <div className="mb-8">
           <input
             ref={fileInputRef}
@@ -124,14 +127,14 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
           )}
         </div>
 
-        {/* Gallery */}
-        {totalPhotos === 0 ? (
+        {/* Regular albums */}
+        {regularTotal === 0 && guestUploadFiles.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-stone-400 text-sm">Henüz fotoğraf yok.</p>
           </div>
         ) : (
           <div className="space-y-10">
-            {albums.map((album) => {
+            {regularAlbums.map((album) => {
               const files = mediaByAlbum[album.id] ?? []
               if (files.length === 0) return null
               return (
@@ -142,18 +145,9 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
                     {files.map((f) => (
                       <div key={f.id} className="aspect-square bg-stone-100 rounded-xl overflow-hidden">
                         {f.file_type === 'image' ? (
-                          <img
-                            src={mediaUrl(f.storage_path)}
-                            alt={f.file_name}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
+                          <img src={mediaUrl(f.storage_path)} alt={f.file_name} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
-                          <video
-                            src={mediaUrl(f.storage_path)}
-                            className="w-full h-full object-cover"
-                            controls
-                          />
+                          <video src={mediaUrl(f.storage_path)} className="w-full h-full object-cover" controls />
                         )}
                       </div>
                     ))}
@@ -161,6 +155,28 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
                 </section>
               )
             })}
+
+            {/* Guest uploads section at bottom */}
+            {guestUploadFiles.length > 0 && (
+              <section>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-px flex-1 bg-stone-200" />
+                  <span className="text-xs text-stone-400 font-medium">Misafirlerden Gelen Fotoğraflar</span>
+                  <div className="h-px flex-1 bg-stone-200" />
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                  {guestUploadFiles.map((f) => (
+                    <div key={f.id} className="aspect-square bg-stone-100 rounded-xl overflow-hidden">
+                      {f.file_type === 'image' ? (
+                        <img src={mediaUrl(f.storage_path)} alt={f.file_name} className="w-full h-full object-cover" loading="lazy" />
+                      ) : (
+                        <video src={mediaUrl(f.storage_path)} className="w-full h-full object-cover" controls />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </main>
