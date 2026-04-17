@@ -25,13 +25,8 @@ export default function Lightbox({ files, index, supabaseUrl, onClose, onNav }: 
     return `${supabaseUrl}/storage/v1/object/public/wedding-media/${path}`
   }
 
-  const prev = useCallback(() => {
-    if (index > 0) onNav(index - 1)
-  }, [index, onNav])
-
-  const next = useCallback(() => {
-    if (index < files.length - 1) onNav(index + 1)
-  }, [index, files.length, onNav])
+  const prev = useCallback(() => { if (index > 0) onNav(index - 1) }, [index, onNav])
+  const next = useCallback(() => { if (index < files.length - 1) onNav(index + 1) }, [index, files.length, onNav])
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -39,8 +34,12 @@ export default function Lightbox({ files, index, supabaseUrl, onClose, onNav }: 
       if (e.key === 'ArrowLeft') prev()
       if (e.key === 'ArrowRight') next()
     }
+    document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
   }, [onClose, prev, next])
 
   async function handleDownload() {
@@ -57,24 +56,25 @@ export default function Lightbox({ files, index, supabaseUrl, onClose, onNav }: 
   if (!file) return null
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
-      onClick={onClose}
-    >
-      {/* Toolbar */}
-      <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 py-3 z-10">
-        <span className="text-white/60 text-sm">{index + 1} / {files.length}</span>
+    <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/95 backdrop-blur-sm" />
+
+      {/* Top bar */}
+      <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 py-4 z-10">
+        <span className="text-white/40 text-xs tracking-widest">
+          {index + 1} / {files.length}
+        </span>
         <div className="flex items-center gap-2">
           <button
             onClick={(e) => { e.stopPropagation(); handleDownload() }}
-            className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
-            title="İndir"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white text-xs transition"
           >
-            <Download size={18} />
+            <Download size={13} /> İndir
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onClose() }}
-            className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
+            className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition"
           >
             <X size={18} />
           </button>
@@ -85,19 +85,22 @@ export default function Lightbox({ files, index, supabaseUrl, onClose, onNav }: 
       {index > 0 && (
         <button
           onClick={(e) => { e.stopPropagation(); prev() }}
-          className="absolute left-2 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition z-10"
+          className="absolute left-3 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
         >
-          <ChevronLeft size={28} />
+          <ChevronLeft size={24} />
         </button>
       )}
 
       {/* Media */}
-      <div className="max-w-5xl max-h-screen w-full h-full flex items-center justify-center p-16" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="relative z-10 max-w-5xl max-h-[85vh] w-full flex items-center justify-center px-16"
+        onClick={(e) => e.stopPropagation()}
+      >
         {file.file_type === 'image' ? (
           <img
             src={mediaUrl(file.storage_path)}
             alt={file.file_name}
-            className="max-w-full max-h-full object-contain rounded-lg select-none"
+            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl select-none"
             draggable={false}
           />
         ) : (
@@ -105,7 +108,7 @@ export default function Lightbox({ files, index, supabaseUrl, onClose, onNav }: 
             src={mediaUrl(file.storage_path)}
             controls
             autoPlay
-            className="max-w-full max-h-full rounded-lg"
+            className="max-w-full max-h-[85vh] rounded-lg shadow-2xl"
           />
         )}
       </div>
@@ -114,11 +117,16 @@ export default function Lightbox({ files, index, supabaseUrl, onClose, onNav }: 
       {index < files.length - 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); next() }}
-          className="absolute right-2 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition z-10"
+          className="absolute right-3 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
         >
-          <ChevronRight size={28} />
+          <ChevronRight size={24} />
         </button>
       )}
+
+      {/* Bottom filename */}
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-4 z-10">
+        <p className="text-white/30 text-xs">{file.file_name}</p>
+      </div>
     </div>
   )
 }

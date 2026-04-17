@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
+import { Playfair_Display } from 'next/font/google'
 import './globals.css'
 
 const geist = Geist({
@@ -7,18 +8,19 @@ const geist = Geist({
   variable: '--font-geist',
 })
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+})
+
 export const metadata: Metadata = {
   title: 'Wedding Studio',
   description: 'Wedding media delivery platform',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} h-full antialiased`}>
+    <html lang="tr" className={`${geist.variable} ${playfair.variable} h-full antialiased`}>
       <body className="min-h-full bg-stone-50 text-stone-900">{children}</body>
     </html>
   )

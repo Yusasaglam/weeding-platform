@@ -2,8 +2,10 @@
 
 :root {
   --font-geist: '';
+  --font-playfair: '';
 }
 
 @theme inline {
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
 }
