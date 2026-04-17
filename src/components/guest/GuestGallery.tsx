@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Lightbox from '@/components/ui/Lightbox'
 
 interface Album { id: string; title: string; description: string; is_guest_uploads: boolean }
 interface MediaFile { id: string; storage_path: string; file_name: string; file_type: string }
@@ -25,10 +26,10 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<string | null>(null)
   const [myUploadIds, setMyUploadIds] = useState<string[]>([])
+  const [lightbox, setLightbox] = useState<{ files: MediaFile[]; index: number } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
-  // LocalStorage'dan bu isim+token'ın yüklediği foto ID'lerini al
   useEffect(() => {
     if (!nameConfirmed || !guestName.trim()) return
     try {
@@ -63,7 +64,6 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
       }
     }
 
-    // Bu cihazın yüklediği ID'leri kaydet
     setMyUploadIds((prev) => {
       const updated = [...prev, ...newIds]
       try { localStorage.setItem(getStorageKey(token, guestName), JSON.stringify(updated)) } catch {}
@@ -74,7 +74,7 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
     setUploadProgress(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
     router.refresh()
-  }, [token, router])
+  }, [token, guestName, router])
 
   if (!nameConfirmed) {
     return (
@@ -83,9 +83,7 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
           <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-8 text-center">
             <div className="text-3xl mb-4">💍</div>
             <h1 className="text-xl font-semibold text-stone-800 mb-1">{wedding.title}</h1>
-            <p className="text-stone-500 text-sm mb-6">
-              {wedding.bride_name} & {wedding.groom_name}
-            </p>
+            <p className="text-stone-500 text-sm mb-6">{wedding.bride_name} & {wedding.groom_name}</p>
             <p className="text-stone-600 text-sm mb-4">Galeriye girmek için adınızı yazın</p>
             <input
               type="text"
@@ -109,102 +107,115 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
 
   const regularAlbums = albums.filter((a) => !a.is_guest_uploads)
   const guestUploadAlbum = albums.find((a) => a.is_guest_uploads)
-
-  // Sadece bu cihazdan yüklenen fotoğraflar
   const allGuestFiles = guestUploadAlbum ? (mediaByAlbum[guestUploadAlbum.id] ?? []) : []
   const myFiles = allGuestFiles.filter((f) => myUploadIds.includes(f.id))
-
-  const regularTotal = regularAlbums.reduce((s, a) => s + (mediaByAlbum[a.id]?.length ?? 0), 0)
+  const allRegularFiles = regularAlbums.flatMap((a) => mediaByAlbum[a.id] ?? [])
+  const regularTotal = allRegularFiles.length
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <header className="bg-white border-b border-stone-200 px-4 py-5 text-center">
-        <h1 className="text-lg font-semibold text-stone-800">{wedding.title}</h1>
-        <p className="text-stone-400 text-sm">{wedding.bride_name} & {wedding.groom_name}</p>
-        {guestName && (
-          <p className="text-stone-500 text-sm mt-1">Hoş geldiniz, {guestName} 👋</p>
-        )}
-      </header>
+    <>
+      <div className="min-h-screen bg-stone-50">
+        <header className="bg-white border-b border-stone-200 px-4 py-5 text-center">
+          <h1 className="text-lg font-semibold text-stone-800">{wedding.title}</h1>
+          <p className="text-stone-400 text-sm">{wedding.bride_name} & {wedding.groom_name}</p>
+          {guestName && <p className="text-stone-500 text-sm mt-1">Hoş geldiniz, {guestName} 👋</p>}
+        </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
-        {/* Upload butonu */}
-        <div className="mb-8">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*,video/*"
-            multiple
-            className="hidden"
-            onChange={handleFileChange}
-          />
-          {uploading ? (
-            <div className="w-full py-4 rounded-2xl border border-stone-200 bg-white text-center">
-              <p className="text-sm text-stone-500">{uploadProgress ?? 'Yükleniyor...'}</p>
+        <main className="max-w-5xl mx-auto px-4 py-8">
+          {/* Upload */}
+          <div className="mb-8">
+            <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleFileChange} />
+            {uploading ? (
+              <div className="w-full py-4 rounded-2xl border border-stone-200 bg-white text-center">
+                <p className="text-sm text-stone-500">{uploadProgress ?? 'Yükleniyor...'}</p>
+              </div>
+            ) : (
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full py-4 rounded-2xl border border-dashed border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50 text-stone-600 hover:text-stone-800 text-sm font-medium transition flex items-center justify-center gap-2"
+              >
+                <span className="text-lg">📷</span> Fotoğraf / Video Yükle
+              </button>
+            )}
+          </div>
+
+          {regularTotal === 0 && myFiles.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-stone-400 text-sm">Henüz fotoğraf yok.</p>
             </div>
           ) : (
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full py-4 rounded-2xl border border-dashed border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50 text-stone-600 hover:text-stone-800 text-sm font-medium transition flex items-center justify-center gap-2"
-            >
-              <span className="text-lg">📷</span>
-              Fotoğraf / Video Yükle
-            </button>
-          )}
-        </div>
+            <div className="space-y-10">
+              {/* Düğün fotoğrafları */}
+              {regularAlbums.map((album) => {
+                const files = mediaByAlbum[album.id] ?? []
+                if (files.length === 0) return null
+                const albumOffset = allRegularFiles.indexOf(files[0])
+                return (
+                  <section key={album.id}>
+                    <h2 className="text-base font-semibold text-stone-800 mb-1">{album.title}</h2>
+                    {album.description && <p className="text-stone-400 text-sm mb-4">{album.description}</p>}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                      {files.map((f, i) => (
+                        <div
+                          key={f.id}
+                          className="aspect-square bg-stone-100 rounded-xl overflow-hidden cursor-pointer"
+                          onClick={() => setLightbox({ files: allRegularFiles, index: albumOffset + i })}
+                        >
+                          {f.file_type === 'image' ? (
+                            <img src={mediaUrl(f.storage_path)} alt={f.file_name} className="w-full h-full object-cover" loading="lazy" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-stone-200">
+                              <span className="text-3xl">🎬</span>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )
+              })}
 
-        {regularTotal === 0 && myFiles.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-stone-400 text-sm">Henüz fotoğraf yok.</p>
-          </div>
-        ) : (
-          <div className="space-y-10">
-            {/* Düğün fotoğrafları */}
-            {regularAlbums.map((album) => {
-              const files = mediaByAlbum[album.id] ?? []
-              if (files.length === 0) return null
-              return (
-                <section key={album.id}>
-                  <h2 className="text-base font-semibold text-stone-800 mb-1">{album.title}</h2>
-                  {album.description && <p className="text-stone-400 text-sm mb-4">{album.description}</p>}
+              {/* Kendi yükledikleri */}
+              {myFiles.length > 0 && (
+                <section>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="h-px flex-1 bg-stone-200" />
+                    <span className="text-xs text-stone-400 font-medium">Yüklediğiniz Fotoğraflar</span>
+                    <div className="h-px flex-1 bg-stone-200" />
+                  </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                    {files.map((f) => (
-                      <div key={f.id} className="aspect-square bg-stone-100 rounded-xl overflow-hidden">
+                    {myFiles.map((f, i) => (
+                      <div
+                        key={f.id}
+                        className="aspect-square bg-stone-100 rounded-xl overflow-hidden cursor-pointer"
+                        onClick={() => setLightbox({ files: myFiles, index: i })}
+                      >
                         {f.file_type === 'image' ? (
                           <img src={mediaUrl(f.storage_path)} alt={f.file_name} className="w-full h-full object-cover" loading="lazy" />
                         ) : (
-                          <video src={mediaUrl(f.storage_path)} className="w-full h-full object-cover" controls />
+                          <div className="w-full h-full flex items-center justify-center bg-stone-200">
+                            <span className="text-3xl">🎬</span>
+                          </div>
                         )}
                       </div>
                     ))}
                   </div>
                 </section>
-              )
-            })}
+              )}
+            </div>
+          )}
+        </main>
+      </div>
 
-            {/* Bu cihazdan yüklenen fotoğraflar */}
-            {myFiles.length > 0 && (
-              <section>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px flex-1 bg-stone-200" />
-                  <span className="text-xs text-stone-400 font-medium">Yüklediğiniz Fotoğraflar</span>
-                  <div className="h-px flex-1 bg-stone-200" />
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                  {myFiles.map((f) => (
-                    <div key={f.id} className="aspect-square bg-stone-100 rounded-xl overflow-hidden">
-                      {f.file_type === 'image' ? (
-                        <img src={mediaUrl(f.storage_path)} alt={f.file_name} className="w-full h-full object-cover" loading="lazy" />
-                      ) : (
-                        <video src={mediaUrl(f.storage_path)} className="w-full h-full object-cover" controls />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
-        )}
-      </main>
-    </div>
+      {lightbox && (
+        <Lightbox
+          files={lightbox.files}
+          index={lightbox.index}
+          supabaseUrl={supabaseUrl}
+          onClose={() => setLightbox(null)}
+          onNav={(i) => setLightbox((prev) => prev ? { ...prev, index: i } : null)}
+        />
+      )}
+    </>
   )
 }
