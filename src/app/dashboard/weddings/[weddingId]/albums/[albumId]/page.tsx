@@ -65,7 +65,7 @@ function MediaThumb({ file }: { file: { id: string; file_name: string; file_type
     <div className="aspect-square bg-stone-100 rounded-lg overflow-hidden relative">
       {file.file_type === 'image' ? (
         <img
-          src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/authenticated/wedding-media/${file.storage_path}`}
+          src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/wedding-media/${file.storage_path}`}
           alt={file.file_name}
           className="w-full h-full object-cover"
         />

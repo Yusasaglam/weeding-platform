@@ -20,7 +20,7 @@ export default function CoupleMediaGrid({ files, favSet, weddingId }: Props) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 
   function mediaUrl(path: string) {
-    return `${supabaseUrl}/storage/v1/object/authenticated/wedding-media/${path}`
+    return `${supabaseUrl}/storage/v1/object/public/wedding-media/${path}`
   }
 
   function handleFav(fileId: string) {
