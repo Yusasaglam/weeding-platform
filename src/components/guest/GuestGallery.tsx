@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface Album { id: string; title: string; description: string; is_guest_uploads: boolean }
@@ -15,13 +15,26 @@ interface Props {
   token: string
 }
 
+function getStorageKey(token: string) {
+  return `guest_uploads_${token}`
+}
+
 export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUrl, token }: Props) {
   const [guestName, setGuestName] = useState('')
   const [nameConfirmed, setNameConfirmed] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<string | null>(null)
+  const [myUploadIds, setMyUploadIds] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+
+  // LocalStorage'dan bu cihazın yüklediği foto ID'lerini al
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(getStorageKey(token))
+      if (stored) setMyUploadIds(JSON.parse(stored))
+    } catch {}
+  }, [token])
 
   function mediaUrl(path: string) {
     return `${supabaseUrl}/storage/v1/object/public/wedding-media/${path}`
@@ -32,6 +45,7 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
     if (files.length === 0) return
 
     setUploading(true)
+    const newIds: string[] = []
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
@@ -42,11 +56,18 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
       fd.append('file', file)
 
       const res = await fetch('/api/guest-upload', { method: 'POST', body: fd })
-      if (!res.ok) {
-        const err = await res.json()
-        console.error('Upload error:', err)
+      if (res.ok) {
+        const { file: uploaded } = await res.json()
+        if (uploaded?.id) newIds.push(uploaded.id)
       }
     }
+
+    // Bu cihazın yüklediği ID'leri kaydet
+    setMyUploadIds((prev) => {
+      const updated = [...prev, ...newIds]
+      try { localStorage.setItem(getStorageKey(token), JSON.stringify(updated)) } catch {}
+      return updated
+    })
 
     setUploading(false)
     setUploadProgress(null)
@@ -87,12 +108,15 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
 
   const regularAlbums = albums.filter((a) => !a.is_guest_uploads)
   const guestUploadAlbum = albums.find((a) => a.is_guest_uploads)
-  const guestUploadFiles = guestUploadAlbum ? (mediaByAlbum[guestUploadAlbum.id] ?? []) : []
+
+  // Sadece bu cihazdan yüklenen fotoğraflar
+  const allGuestFiles = guestUploadAlbum ? (mediaByAlbum[guestUploadAlbum.id] ?? []) : []
+  const myFiles = allGuestFiles.filter((f) => myUploadIds.includes(f.id))
+
   const regularTotal = regularAlbums.reduce((s, a) => s + (mediaByAlbum[a.id]?.length ?? 0), 0)
 
   return (
     <div className="min-h-screen bg-stone-50">
-      {/* Header */}
       <header className="bg-white border-b border-stone-200 px-4 py-5 text-center">
         <h1 className="text-lg font-semibold text-stone-800">{wedding.title}</h1>
         <p className="text-stone-400 text-sm">{wedding.bride_name} & {wedding.groom_name}</p>
@@ -102,7 +126,7 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-8">
-        {/* Upload */}
+        {/* Upload butonu */}
         <div className="mb-8">
           <input
             ref={fileInputRef}
@@ -127,13 +151,13 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
           )}
         </div>
 
-        {/* Regular albums */}
-        {regularTotal === 0 && guestUploadFiles.length === 0 ? (
+        {regularTotal === 0 && myFiles.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-stone-400 text-sm">Henüz fotoğraf yok.</p>
           </div>
         ) : (
           <div className="space-y-10">
+            {/* Düğün fotoğrafları */}
             {regularAlbums.map((album) => {
               const files = mediaByAlbum[album.id] ?? []
               if (files.length === 0) return null
@@ -156,16 +180,16 @@ export default function GuestGallery({ wedding, albums, mediaByAlbum, supabaseUr
               )
             })}
 
-            {/* Guest uploads section at bottom */}
-            {guestUploadFiles.length > 0 && (
+            {/* Bu cihazdan yüklenen fotoğraflar */}
+            {myFiles.length > 0 && (
               <section>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px flex-1 bg-stone-200" />
-                  <span className="text-xs text-stone-400 font-medium">Misafirlerden Gelen Fotoğraflar</span>
+                  <span className="text-xs text-stone-400 font-medium">Yüklediğiniz Fotoğraflar</span>
                   <div className="h-px flex-1 bg-stone-200" />
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                  {guestUploadFiles.map((f) => (
+                  {myFiles.map((f) => (
                     <div key={f.id} className="aspect-square bg-stone-100 rounded-xl overflow-hidden">
                       {f.file_type === 'image' ? (
                         <img src={mediaUrl(f.storage_path)} alt={f.file_name} className="w-full h-full object-cover" loading="lazy" />
