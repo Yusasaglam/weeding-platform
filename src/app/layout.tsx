@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { Playfair_Display } from 'next/font/google'
 import './globals.css'
 
-const geist = Geist({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-geist',
+  variable: '--font-inter',
 })
 
 const playfair = Playfair_Display({
@@ -14,14 +14,14 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'Wedding Studio',
-  description: 'Wedding media delivery platform',
+  title: 'WeddingLens — Düğününüzün Her Anı',
+  description: 'Misafirlerinizin çektiği fotoğraf ve videoları QR kod ile anında toplayın. Premium düğün galeri platformu.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" className={`${geist.variable} ${playfair.variable} h-full antialiased`}>
-      <body className="min-h-full bg-stone-50 text-stone-900">{children}</body>
+    <html lang="tr" className={`${inter.variable} ${playfair.variable} h-full antialiased`}>
+      <body className="min-h-full bg-white text-stone-900">{children}</body>
     </html>
   )
 }

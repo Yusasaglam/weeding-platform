@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { register } from '@/lib/actions/auth'
 
 export default function RegisterForm() {
-  const [error, setError]     = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(formData: FormData) {
@@ -18,48 +18,42 @@ export default function RegisterForm() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-8">
+    <div className="bg-white rounded-3xl shadow-sm border border-stone-100 p-8">
       <form action={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="full_name" className="block text-sm font-medium text-stone-700 mb-1.5">
-            Ad Soyad
-          </label>
+          <label htmlFor="full_name" className="block text-sm font-medium text-stone-700 mb-2">Ad Soyad</label>
           <input
             id="full_name" name="full_name" type="text" required
             placeholder="Adınız Soyadınız"
-            className="w-full px-4 py-2.5 rounded-lg border border-stone-300 text-stone-900 text-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent transition"
+            className="w-full px-4 py-3 rounded-xl border border-stone-200 text-stone-900 text-sm placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition"
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-stone-700 mb-1.5">
-            Email
-          </label>
+          <label htmlFor="email" className="block text-sm font-medium text-stone-700 mb-2">Email</label>
           <input
             id="email" name="email" type="email" required autoComplete="email"
             placeholder="ornek@email.com"
-            className="w-full px-4 py-2.5 rounded-lg border border-stone-300 text-stone-900 text-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent transition"
+            className="w-full px-4 py-3 rounded-xl border border-stone-200 text-stone-900 text-sm placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition"
           />
         </div>
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-stone-700 mb-1.5">
-            Şifre
-          </label>
+          <label htmlFor="password" className="block text-sm font-medium text-stone-700 mb-2">Şifre</label>
           <input
             id="password" name="password" type="password" required autoComplete="new-password"
             placeholder="En az 6 karakter"
-            className="w-full px-4 py-2.5 rounded-lg border border-stone-300 text-stone-900 text-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent transition"
+            className="w-full px-4 py-3 rounded-xl border border-stone-200 text-stone-900 text-sm placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition"
           />
         </div>
         {error && (
-          <p className="text-sm text-red-600 bg-red-50 px-4 py-2.5 rounded-lg border border-red-100">
+          <p className="text-sm text-red-500 bg-red-50 px-4 py-3 rounded-xl border border-red-100">
             {error}
           </p>
         )}
         <button
           type="submit" disabled={loading}
-          className="w-full py-2.5 px-4 bg-stone-800 hover:bg-stone-700 disabled:bg-stone-400 text-white text-sm font-medium rounded-lg transition"
+          className="w-full py-3.5 bg-rose-500 hover:bg-rose-600 disabled:bg-rose-300 text-white text-sm font-semibold rounded-xl transition-colors"
         >
-          {loading ? 'Kayıt olunuyor…' : 'Kayıt Ol'}
+          {loading ? 'Kayıt olunuyor…' : 'Hesap Oluştur'}
         </button>
       </form>
     </div>
