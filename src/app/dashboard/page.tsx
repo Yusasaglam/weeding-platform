@@ -24,14 +24,14 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* Page header */}
-      <div className="mb-10">
+      <div className="mb-8">
         <p className="text-rose-500 text-xs font-semibold tracking-widest uppercase mb-2">Hoş Geldiniz</p>
-        <h1 className="font-serif text-4xl text-stone-900 mb-2">Genel Bakış</h1>
+        <h1 className="font-serif text-3xl md:text-4xl text-stone-900 mb-2">Genel Bakış</h1>
         <p className="text-stone-400 text-sm">Platformdaki tüm düğün etkinliklerini buradan yönetin.</p>
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-3 gap-5 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <StatCard
           label="Düğün"
           value={weddingCount ?? 0}
@@ -56,7 +56,7 @@ export default async function DashboardPage() {
 
       {/* Recent weddings */}
       <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
-        <div className="flex items-center justify-between px-7 py-5 border-b border-stone-100">
+        <div className="flex items-center justify-between px-5 md:px-7 py-4 border-b border-stone-100">
           <div>
             <h2 className="font-serif text-lg text-stone-900">Son Düğünler</h2>
             <p className="text-xs text-stone-400 mt-0.5">En son oluşturulan etkinlikler</p>
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
               <li key={w.id}>
                 <Link
                   href={`/dashboard/weddings/${w.id}`}
-                  className="flex items-center justify-between px-7 py-4 hover:bg-stone-50/60 transition-colors group"
+                  className="flex items-center justify-between px-5 md:px-7 py-4 hover:bg-stone-50/60 transition-colors group"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-9 h-9 bg-rose-50 rounded-xl flex items-center justify-center shrink-0">

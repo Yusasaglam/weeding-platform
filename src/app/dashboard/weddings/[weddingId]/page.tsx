@@ -46,10 +46,10 @@ export default async function WeddingDetailPage({ params }: Props) {
       </Link>
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-10">
+      <div className="flex items-start justify-between mb-8 flex-wrap gap-3">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="font-serif text-4xl text-stone-900">{wedding.title}</h1>
+            <h1 className="font-serif text-2xl md:text-4xl text-stone-900">{wedding.title}</h1>
             <StatusBadge status={wedding.status} />
           </div>
           <p className="text-stone-400 text-sm">
@@ -61,7 +61,7 @@ export default async function WeddingDetailPage({ params }: Props) {
       </div>
 
       {/* Quick action cards */}
-      <div className="grid grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <ActionCard
           href={`/dashboard/weddings/${weddingId}/albums`}
           icon={<FolderOpen size={20} className="text-amber-500" />}
@@ -96,7 +96,7 @@ export default async function WeddingDetailPage({ params }: Props) {
 
       {/* Albums list */}
       <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
-        <div className="flex items-center justify-between px-7 py-5 border-b border-stone-100">
+        <div className="flex items-center justify-between px-5 md:px-7 py-4 md:py-5 border-b border-stone-100">
           <div>
             <h2 className="font-serif text-lg text-stone-900">Albümler</h2>
             <p className="text-xs text-stone-400 mt-0.5">{albums?.length ?? 0} albüm</p>
@@ -124,7 +124,7 @@ export default async function WeddingDetailPage({ params }: Props) {
               <li key={a.id}>
                 <Link
                   href={`/dashboard/weddings/${weddingId}/albums/${a.id}`}
-                  className="flex items-center justify-between px-7 py-4 hover:bg-stone-50/60 transition-colors group"
+                  className="flex items-center justify-between px-5 md:px-7 py-4 hover:bg-stone-50/60 transition-colors group"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center shrink-0">
