@@ -48,12 +48,12 @@ export default function CoupleGallerySection({ albums, favSet, weddingId }: Prop
 
   if (allMedia.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm px-8 py-16 text-center">
-        <div className="w-14 h-14 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4">
-          <ImageOff size={22} className="text-stone-300" />
+      <div className="py-16 text-center">
+        <div className="w-14 h-14 bg-stone-800 border border-white/6 rounded-full flex items-center justify-center mx-auto mb-4">
+          <ImageOff size={22} className="text-stone-600" />
         </div>
-        <p className="font-serif text-lg text-stone-600 mb-1">Henüz fotoğraf yok</p>
-        <p className="text-stone-400 text-sm">Fotoğrafçınız yakında ekleyecek.</p>
+        <p className="font-serif text-lg text-stone-400 mb-1">Henüz fotoğraf yok</p>
+        <p className="text-stone-600 text-sm">Fotoğrafçınız yakında ekleyecek.</p>
       </div>
     )
   }
@@ -64,27 +64,25 @@ export default function CoupleGallerySection({ albums, favSet, weddingId }: Prop
         if (album.media_files.length === 0) return null
         return (
           <div key={album.id}>
-            {/* Album header */}
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="font-serif text-lg text-stone-900">{album.title}</h3>
+                <h3 className="font-serif text-base text-white">{album.title}</h3>
                 {album.description && (
-                  <p className="text-xs text-stone-400 mt-0.5">{album.description}</p>
+                  <p className="text-xs text-stone-600 mt-0.5">{album.description}</p>
                 )}
               </div>
-              <span className="text-xs text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full">
+              <span className="text-xs text-stone-600 bg-stone-800 border border-white/5 px-2.5 py-1 rounded-full">
                 {album.media_files.length} fotoğraf
               </span>
             </div>
 
-            {/* Photo grid */}
             <div className="grid grid-cols-3 md:grid-cols-4 gap-1 rounded-2xl overflow-hidden">
               {album.media_files.map((f, i) => {
                 const isFav = favorites.has(f.id)
                 return (
                   <div
                     key={f.id}
-                    className="relative aspect-square bg-stone-100 overflow-hidden cursor-pointer group"
+                    className="relative aspect-square bg-stone-800 overflow-hidden cursor-pointer group"
                     onClick={() => {
                       setLightboxFiles(album.media_files)
                       setLightboxIndex(i)
@@ -98,7 +96,7 @@ export default function CoupleGallerySection({ albums, favSet, weddingId }: Prop
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full bg-stone-800 flex items-center justify-center">
+                      <div className="w-full h-full bg-stone-900 flex items-center justify-center">
                         <span className="text-3xl">🎬</span>
                       </div>
                     )}
@@ -106,8 +104,8 @@ export default function CoupleGallerySection({ albums, favSet, weddingId }: Prop
                       onClick={(e) => { e.stopPropagation(); handleFav(f.id) }}
                       className={`absolute bottom-1.5 right-1.5 p-1.5 rounded-full transition-all shadow ${
                         isFav
-                          ? 'bg-rose-500 text-white opacity-100'
-                          : 'bg-white/80 text-stone-400 opacity-100 md:opacity-0 md:group-hover:opacity-100'
+                          ? 'bg-amber-400 text-stone-950 opacity-100'
+                          : 'bg-stone-900/80 text-stone-400 opacity-100 md:opacity-0 md:group-hover:opacity-100'
                       }`}
                     >
                       <Heart size={12} fill={isFav ? 'currentColor' : 'none'} />

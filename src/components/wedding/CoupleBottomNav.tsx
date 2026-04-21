@@ -14,12 +14,12 @@ export default function CoupleBottomNav({ weddingId }: Props) {
   const isFavorites = pathname.includes('/favorites')
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-stone-100 safe-area-pb">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-stone-950/95 backdrop-blur-md border-t border-white/5 safe-area-pb">
       <div className="grid grid-cols-2 max-w-sm mx-auto">
         <Link
           href={`/wedding/${weddingId}`}
           className={`flex flex-col items-center gap-1 py-3 transition-colors ${
-            isGallery ? 'text-rose-500' : 'text-stone-400 hover:text-stone-700'
+            isGallery ? 'text-amber-400' : 'text-stone-600 hover:text-stone-400'
           }`}
         >
           <Images size={22} strokeWidth={isGallery ? 2 : 1.5} />
@@ -28,7 +28,7 @@ export default function CoupleBottomNav({ weddingId }: Props) {
         <Link
           href={`/wedding/${weddingId}/favorites`}
           className={`flex flex-col items-center gap-1 py-3 transition-colors ${
-            isFavorites ? 'text-rose-500' : 'text-stone-400 hover:text-stone-700'
+            isFavorites ? 'text-amber-400' : 'text-stone-600 hover:text-stone-400'
           }`}
         >
           <Heart
