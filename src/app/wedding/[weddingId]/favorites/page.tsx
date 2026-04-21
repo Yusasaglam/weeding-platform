@@ -53,7 +53,7 @@ export default async function FavoritesPage({ params }: Props) {
         </div>
       ) : (
         <CoupleGallerySection
-          albums={[{ id: 'favorites', title: 'Favoriler', media_files: mediaFiles, description: null, visibility: 'couple' }]}
+          albums={[{ id: 'favorites', title: 'Favoriler', media_files: mediaFiles, description: null }]}
           favSet={favIds}
           weddingId={weddingId}
         />
