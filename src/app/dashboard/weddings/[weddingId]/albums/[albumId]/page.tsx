@@ -1,7 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, Upload } from 'lucide-react'
+import { ChevronLeft, Upload, ImageIcon } from 'lucide-react'
 import AdminAlbumClient from '@/components/dashboard/AdminAlbumClient'
 
 interface Props { params: Promise<{ weddingId: string; albumId: string }> }
@@ -19,34 +19,45 @@ export default async function AlbumDetailPage({ params }: Props) {
   if (!album || !wedding) notFound()
 
   return (
-    <div className="max-w-5xl">
-      <Link href={`/dashboard/weddings/${weddingId}`} className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800 transition-colors mb-6">
+    <div>
+      <Link href={`/dashboard/weddings/${weddingId}`} className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors mb-8">
         <ChevronLeft size={14} /> {wedding.title}
       </Link>
 
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex items-start justify-between mb-10">
         <div>
-          <h1 className="text-2xl font-semibold text-stone-800">{album.title}</h1>
-          {album.description && <p className="text-stone-500 text-sm mt-1">{album.description}</p>}
-          <div className="mt-2"><VisibilityBadge visibility={album.visibility} /></div>
+          <h1 className="font-serif text-4xl text-stone-900 mb-2">{album.title}</h1>
+          <div className="flex items-center gap-3">
+            {album.description && <p className="text-stone-400 text-sm">{album.description}</p>}
+            <VisibilityBadge visibility={album.visibility} />
+          </div>
         </div>
-        <Link href={`/dashboard/weddings/${weddingId}/uploads?albumId=${albumId}`}
-          className="flex items-center gap-1.5 px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white text-sm font-medium rounded-xl transition-colors">
-          <Upload size={14} /> Medya Yükle
+        <Link
+          href={`/dashboard/weddings/${weddingId}/uploads?albumId=${albumId}`}
+          className="inline-flex items-center gap-2 px-5 py-3 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-2xl transition-colors shadow-sm shadow-rose-100 mt-1"
+        >
+          <Upload size={15} /> Medya Yükle
         </Link>
       </div>
 
+      {/* Media grid */}
       {!mediaFiles || mediaFiles.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-stone-200 px-8 py-16 text-center mb-8">
-          <p className="text-sm text-stone-400">Bu albümde henüz medya yok.</p>
-          <Link href={`/dashboard/weddings/${weddingId}/uploads?albumId=${albumId}`}
-            className="mt-3 inline-block text-sm text-stone-700 underline underline-offset-2">
-            Fotoğraf & video yükle
+        <div className="bg-white rounded-3xl border border-stone-100 px-8 py-20 text-center shadow-sm mb-8">
+          <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-5">
+            <ImageIcon size={24} className="text-stone-300" />
+          </div>
+          <p className="font-serif text-xl text-stone-600 mb-2">Bu albümde henüz medya yok</p>
+          <p className="text-stone-400 text-sm mb-7">Fotoğraf ve video yükleyerek galeriyi oluşturun.</p>
+          <Link
+            href={`/dashboard/weddings/${weddingId}/uploads?albumId=${albumId}`}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-2xl transition-colors"
+          >
+            <Upload size={15} /> Fotoğraf & Video Yükle
           </Link>
         </div>
       ) : (
         <div className="mb-8">
-          <p className="text-sm text-stone-500 mb-4">{mediaFiles.length} dosya</p>
+          <p className="text-sm text-stone-400 mb-4 font-medium">{mediaFiles.length} dosya</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
             {mediaFiles.map((f) => (
               <MediaThumb key={f.id} file={f} />
@@ -62,16 +73,16 @@ export default async function AlbumDetailPage({ params }: Props) {
 
 function MediaThumb({ file }: { file: { id: string; file_name: string; file_type: string; storage_path: string } }) {
   return (
-    <div className="aspect-square bg-stone-100 rounded-lg overflow-hidden relative">
+    <div className="aspect-square bg-stone-100 rounded-2xl overflow-hidden relative group">
       {file.file_type === 'image' ? (
         <img
           src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/wedding-media/${file.storage_path}`}
           alt={file.file_name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center">
-          <span className="text-2xl">🎬</span>
+        <div className="w-full h-full flex items-center justify-center bg-stone-800">
+          <span className="text-3xl">🎬</span>
         </div>
       )}
     </div>

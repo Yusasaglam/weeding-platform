@@ -2,13 +2,9 @@
 
 import { useState } from 'react'
 import { assignCoupleToWedding, removeCoupleFromWedding } from '@/lib/actions/users'
-import { UserPlus, X } from 'lucide-react'
+import { UserPlus, X, Users } from 'lucide-react'
 
-interface User {
-  id: string
-  full_name: string
-  email: string
-}
+interface User { id: string; full_name: string; email: string }
 
 interface Props {
   weddingId: string
@@ -16,22 +12,17 @@ interface Props {
   availableCouples: User[]
 }
 
-export default function WeddingCouplesSection({
-  weddingId,
-  assignedCouples,
-  availableCouples,
-}: Props) {
-  const [selected, setSelected]         = useState('')
-  const [loading, setLoading]           = useState(false)
-  const [removingId, setRemovingId]     = useState<string | null>(null)
-  const [localAssigned, setLocalAssigned] = useState(assignedCouples)
+export default function WeddingCouplesSection({ weddingId, assignedCouples, availableCouples }: Props) {
+  const [selected, setSelected]             = useState('')
+  const [loading, setLoading]               = useState(false)
+  const [removingId, setRemovingId]         = useState<string | null>(null)
+  const [localAssigned, setLocalAssigned]   = useState(assignedCouples)
   const [localAvailable, setLocalAvailable] = useState(availableCouples)
 
   async function handleAssign() {
     if (!selected || loading) return
     const user = localAvailable.find((u) => u.id === selected)
     if (!user) return
-
     setLoading(true)
     const result = await assignCoupleToWedding(weddingId, selected)
     if (!result?.error) {
@@ -54,31 +45,43 @@ export default function WeddingCouplesSection({
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-      <div className="px-6 py-4 border-b border-stone-100">
-        <h2 className="text-sm font-semibold text-stone-700">Çift Hesapları</h2>
+    <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
+      <div className="px-7 py-5 border-b border-stone-100">
+        <h2 className="font-serif text-lg text-stone-900">Çift Hesapları</h2>
         <p className="text-xs text-stone-400 mt-0.5">
-          Bu düğüne atanmış kullanıcılar giriş yaptıklarında buraya yönlendirilir.
+          Atanan çiftler giriş yaptığında bu düğünün galerisine yönlendirilir.
         </p>
       </div>
 
-      {/* Assigned list */}
       {localAssigned.length === 0 ? (
-        <div className="px-6 py-6 text-sm text-stone-400">
-          Henüz atanmış çift hesabı yok.
+        <div className="px-7 py-10 flex items-center gap-4">
+          <div className="w-10 h-10 bg-rose-50 rounded-full flex items-center justify-center shrink-0">
+            <Users size={16} className="text-rose-300" />
+          </div>
+          <div>
+            <p className="text-sm text-stone-500">Henüz atanmış çift hesabı yok.</p>
+            <p className="text-xs text-stone-400 mt-0.5">Aşağıdan bir kullanıcı seçerek atayın.</p>
+          </div>
         </div>
       ) : (
-        <ul className="divide-y divide-stone-100">
+        <ul className="divide-y divide-stone-50">
           {localAssigned.map((u) => (
-            <li key={u.id} className="flex items-center justify-between px-6 py-3">
-              <div>
-                <p className="text-sm font-medium text-stone-800">{u.full_name || '—'}</p>
-                <p className="text-xs text-stone-400">{u.email}</p>
+            <li key={u.id} className="flex items-center justify-between px-7 py-4 hover:bg-stone-50/50 transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-rose-50 rounded-full flex items-center justify-center shrink-0">
+                  <span className="text-xs font-semibold text-rose-500">
+                    {(u.full_name || u.email)[0].toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-stone-800">{u.full_name || '—'}</p>
+                  <p className="text-xs text-stone-400">{u.email}</p>
+                </div>
               </div>
               <button
                 onClick={() => handleRemove(u.id)}
                 disabled={removingId === u.id}
-                className="p-1.5 text-stone-300 hover:text-red-500 transition-colors disabled:opacity-40"
+                className="p-2 text-stone-300 hover:text-red-400 hover:bg-red-50 transition-colors disabled:opacity-40 rounded-lg"
               >
                 <X size={14} />
               </button>
@@ -87,13 +90,12 @@ export default function WeddingCouplesSection({
         </ul>
       )}
 
-      {/* Assign new */}
       {localAvailable.length > 0 && (
-        <div className="px-6 py-4 border-t border-stone-100 flex items-center gap-3">
+        <div className="px-7 py-5 border-t border-stone-100 bg-stone-50/40 flex items-center gap-3">
           <select
             value={selected}
             onChange={(e) => setSelected(e.target.value)}
-            className="flex-1 text-sm px-3 py-2 rounded-lg border border-stone-300 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-stone-400 transition"
+            className="flex-1 text-sm px-4 py-2.5 rounded-xl border border-stone-200 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition"
           >
             <option value="">Kullanıcı seç…</option>
             {localAvailable.map((u) => (
@@ -105,7 +107,7 @@ export default function WeddingCouplesSection({
           <button
             onClick={handleAssign}
             disabled={!selected || loading}
-            className="flex items-center gap-1.5 px-4 py-2 bg-stone-800 hover:bg-stone-700 disabled:bg-stone-300 text-white text-sm font-medium rounded-lg transition-colors shrink-0"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-rose-500 hover:bg-rose-600 disabled:bg-stone-200 disabled:text-stone-400 text-white text-sm font-semibold rounded-xl transition-colors shrink-0"
           >
             <UserPlus size={14} />
             {loading ? 'Atanıyor…' : 'Ata'}
@@ -114,16 +116,16 @@ export default function WeddingCouplesSection({
       )}
 
       {localAvailable.length === 0 && localAssigned.length > 0 && (
-        <div className="px-6 py-3 border-t border-stone-100 text-xs text-stone-400">
+        <div className="px-7 py-4 border-t border-stone-100 text-xs text-stone-400">
           Tüm çift hesapları bu düğüne atanmış.
         </div>
       )}
 
       {localAvailable.length === 0 && localAssigned.length === 0 && (
-        <div className="px-6 py-3 border-t border-stone-100 text-xs text-stone-400">
-          Sistemde henüz çift (couple) rolünde kullanıcı yok.{' '}
-          <a href="/dashboard/users" className="underline hover:text-stone-600">
-            Kullanıcılar sayfasından rol atayın.
+        <div className="px-7 py-4 border-t border-stone-100 text-xs text-stone-400">
+          Sistemde henüz çift rolünde kullanıcı yok.{' '}
+          <a href="/dashboard/users" className="text-rose-500 hover:text-rose-700 font-medium">
+            Kullanıcılar sayfasına gidin →
           </a>
         </div>
       )}

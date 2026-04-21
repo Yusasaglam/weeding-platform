@@ -21,14 +21,14 @@ export default async function QrPage({ params }: Props) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 
   return (
-    <div className="max-w-4xl">
-      <Link href={`/dashboard/weddings/${weddingId}`} className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800 transition-colors mb-6">
+    <div>
+      <Link href={`/dashboard/weddings/${weddingId}`} className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors mb-8">
         <ChevronLeft size={14} /> {wedding.title}
       </Link>
 
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-stone-800">QR Kodlar</h1>
-        <p className="text-stone-500 text-sm mt-1">Misafirler bu QR kodları tarayarak galeriye erişir.</p>
+      <div className="mb-10">
+        <h1 className="font-serif text-4xl text-stone-900 mb-2">QR Kodlar</h1>
+        <p className="text-stone-400 text-sm">Misafirler bu QR kodları tarayarak fotoğraf galerisine erişir.</p>
       </div>
 
       <QrManager

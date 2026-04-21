@@ -1,8 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Heart } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 
 interface Props {
   wedding: { title: string; bride_name: string; groom_name: string } | null
@@ -11,52 +10,26 @@ interface Props {
 }
 
 export default function CoupleNav({ wedding, weddingId, logoutAction }: Props) {
-  const pathname = usePathname()
+  const coupleName = wedding?.bride_name && wedding?.groom_name
+    ? `${wedding.bride_name} & ${wedding.groom_name}`
+    : 'Düğünüm'
 
   return (
-    <header className="bg-white border-b border-stone-100">
-      <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-        <div>
-          {wedding?.bride_name && wedding?.groom_name ? (
-            <p className="font-serif text-lg text-stone-800 leading-tight">
-              {wedding.bride_name} & {wedding.groom_name}
-            </p>
-          ) : (
-            <p className="font-serif text-lg text-stone-800">Düğünüm</p>
-          )}
-          {wedding?.title && (
-            <p className="text-xs text-stone-400 mt-0.5">{wedding.title}</p>
-          )}
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-100">
+      <div className="flex items-center justify-between px-4 py-3 max-w-2xl mx-auto">
+        <div className="flex items-center gap-2">
+          <span className="text-base">💍</span>
+          <span className="font-serif text-base text-stone-900">{coupleName}</span>
         </div>
-
-        <nav className="flex items-center gap-5">
-          <Link
-            href={`/wedding/${weddingId}`}
-            className={`text-sm transition-colors ${
-              pathname === `/wedding/${weddingId}`
-                ? 'text-stone-900 font-medium'
-                : 'text-stone-400 hover:text-stone-700'
-            }`}
+        <form action={logoutAction}>
+          <button
+            type="submit"
+            className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-red-400 transition-colors"
           >
-            Galeri
-          </Link>
-          <Link
-            href={`/wedding/${weddingId}/favorites`}
-            className={`flex items-center gap-1.5 text-sm transition-colors ${
-              pathname.includes('/favorites')
-                ? 'text-rose-500 font-medium'
-                : 'text-stone-400 hover:text-stone-700'
-            }`}
-          >
-            <Heart size={13} fill={pathname.includes('/favorites') ? 'currentColor' : 'none'} />
-            Favoriler
-          </Link>
-          <form action={logoutAction}>
-            <button type="submit" className="text-xs text-stone-300 hover:text-stone-600 transition-colors">
-              Çıkış
-            </button>
-          </form>
-        </nav>
+            <LogOut size={13} />
+            <span className="hidden sm:inline">Çıkış</span>
+          </button>
+        </form>
       </div>
     </header>
   )

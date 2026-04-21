@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import CoupleNav from '@/components/wedding/CoupleNav'
 import { logout } from '@/lib/actions/auth'
+import CoupleNav from '@/components/wedding/CoupleNav'
+import CoupleBottomNav from '@/components/wedding/CoupleBottomNav'
 
 interface Props {
   children: React.ReactNode
@@ -14,7 +15,6 @@ export default async function WeddingLayout({ children, params }: Props) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Verify couple is assigned to this wedding
   const { data: assignment } = await supabase
     .from('wedding_couples')
     .select('wedding_id')
@@ -31,9 +31,12 @@ export default async function WeddingLayout({ children, params }: Props) {
     .single()
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-cream-50">
       <CoupleNav wedding={wedding} weddingId={weddingId} logoutAction={logout} />
-      <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
+      <main className="pb-24 md:pb-8">
+        {children}
+      </main>
+      <CoupleBottomNav weddingId={weddingId} />
     </div>
   )
 }

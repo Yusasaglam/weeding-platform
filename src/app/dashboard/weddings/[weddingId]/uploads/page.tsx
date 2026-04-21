@@ -5,13 +5,13 @@ import { ChevronLeft } from 'lucide-react'
 import BulkUploader from '@/components/media/BulkUploader'
 
 interface Props {
-  params:      Promise<{ weddingId: string }>
+  params:       Promise<{ weddingId: string }>
   searchParams: Promise<{ albumId?: string }>
 }
 
 export default async function UploadsPage({ params, searchParams }: Props) {
-  const { weddingId }    = await params
-  const { albumId }      = await searchParams
+  const { weddingId }  = await params
+  const { albumId }    = await searchParams
   const admin = createAdminClient()
 
   const [{ data: wedding }, { data: albums }] = await Promise.all([
@@ -22,18 +22,23 @@ export default async function UploadsPage({ params, searchParams }: Props) {
   if (!wedding) notFound()
 
   return (
-    <div className="max-w-3xl">
-      <Link href={`/dashboard/weddings/${weddingId}`} className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800 transition-colors mb-6">
+    <div>
+      <Link href={`/dashboard/weddings/${weddingId}`} className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors mb-8">
         <ChevronLeft size={14} /> {wedding.title}
       </Link>
 
-      <h1 className="text-2xl font-semibold text-stone-800 mb-8">Medya Yükle</h1>
+      <div className="mb-10">
+        <h1 className="font-serif text-4xl text-stone-900 mb-2">Medya Yükle</h1>
+        <p className="text-stone-400 text-sm">Fotoğraf ve videolarınızı sürükleyip bırakın veya seçin.</p>
+      </div>
 
-      <BulkUploader
-        weddingId={weddingId}
-        albums={albums ?? []}
-        defaultAlbumId={albumId ?? ''}
-      />
+      <div className="max-w-2xl">
+        <BulkUploader
+          weddingId={weddingId}
+          albums={albums ?? []}
+          defaultAlbumId={albumId ?? ''}
+        />
+      </div>
     </div>
   )
 }

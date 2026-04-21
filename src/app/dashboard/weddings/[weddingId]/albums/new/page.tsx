@@ -9,45 +9,66 @@ export default async function NewAlbumPage({ params }: Props) {
   const action = createAlbum.bind(null, weddingId)
 
   return (
-    <div className="max-w-2xl">
-      <Link href={`/dashboard/weddings/${weddingId}/albums`} className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800 transition-colors mb-6">
+    <div>
+      <Link href={`/dashboard/weddings/${weddingId}/albums`} className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors mb-8">
         <ChevronLeft size={14} /> Albümler
       </Link>
-      <h1 className="text-2xl font-semibold text-stone-800 mb-8">Yeni Albüm</h1>
 
-      <div className="bg-white rounded-2xl border border-stone-200 p-8">
-        <form action={action} className="space-y-5">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-stone-700 mb-1.5">Başlık *</label>
-            <input id="title" name="title" required placeholder="Albüm adı"
-              className="w-full px-4 py-2.5 rounded-lg border border-stone-300 text-stone-900 text-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400 transition" />
-          </div>
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-stone-700 mb-1.5">Açıklama</label>
-            <input id="description" name="description" placeholder="Kısa açıklama (opsiyonel)"
-              className="w-full px-4 py-2.5 rounded-lg border border-stone-300 text-stone-900 text-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400 transition" />
-          </div>
-          <div>
-            <label htmlFor="visibility" className="block text-sm font-medium text-stone-700 mb-1.5">Görünürlük</label>
-            <select id="visibility" name="visibility" defaultValue="private"
-              className="w-full px-4 py-2.5 rounded-lg border border-stone-300 text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 transition">
-              <option value="private">Özel (sadece admin)</option>
-              <option value="couple">Çifte özel</option>
-              <option value="guest">Misafire açık</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="sort_order" className="block text-sm font-medium text-stone-700 mb-1.5">Sıra</label>
-            <input id="sort_order" name="sort_order" type="number" defaultValue={0}
-              className="w-full px-4 py-2.5 rounded-lg border border-stone-300 text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 transition" />
-          </div>
-          <div className="pt-2">
-            <button type="submit" className="px-6 py-2.5 bg-stone-800 hover:bg-stone-700 text-white text-sm font-medium rounded-xl transition-colors">
-              Albümü Oluştur
-            </button>
-          </div>
-        </form>
+      <div className="mb-10">
+        <h1 className="font-serif text-4xl text-stone-900 mb-2">Yeni Albüm</h1>
+        <p className="text-stone-400 text-sm">Fotoğraflarınızı kategorize etmek için albüm oluşturun.</p>
       </div>
+
+      <div className="max-w-2xl">
+        <div className="bg-white rounded-3xl border border-stone-100 p-8 shadow-sm">
+          <form action={action} className="space-y-6">
+            <Field name="title" label="Başlık" placeholder="Albüm adı" required />
+            <Field name="description" label="Açıklama" placeholder="Kısa açıklama (opsiyonel)" />
+            <div>
+              <label htmlFor="visibility" className="block text-sm font-medium text-stone-700 mb-2">Görünürlük</label>
+              <select
+                id="visibility" name="visibility" defaultValue="private"
+                className="w-full px-4 py-3 rounded-xl border border-stone-200 text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition bg-white"
+              >
+                <option value="private">Özel — sadece admin görebilir</option>
+                <option value="couple">Çifte özel — çift de görebilir</option>
+                <option value="guest">Misafire açık — herkes görebilir</option>
+              </select>
+            </div>
+            <Field name="sort_order" label="Sıra" type="number" placeholder="0" />
+            <div className="pt-2 flex items-center gap-4">
+              <button
+                type="submit"
+                className="px-7 py-3 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-2xl transition-colors shadow-sm shadow-rose-100"
+              >
+                Albümü Oluştur
+              </button>
+              <Link href={`/dashboard/weddings/${weddingId}/albums`} className="text-sm text-stone-400 hover:text-stone-700 transition-colors">
+                İptal
+              </Link>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Field({
+  name, label, placeholder, type = 'text', required,
+}: {
+  name: string; label: string; placeholder?: string; type?: string; required?: boolean
+}) {
+  return (
+    <div>
+      <label htmlFor={name} className="block text-sm font-medium text-stone-700 mb-2">
+        {label}
+        {required && <span className="text-rose-400 ml-0.5">*</span>}
+      </label>
+      <input
+        id={name} name={name} type={type} placeholder={placeholder} required={required}
+        className="w-full px-4 py-3 rounded-xl border border-stone-200 text-stone-900 text-sm placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition"
+      />
     </div>
   )
 }

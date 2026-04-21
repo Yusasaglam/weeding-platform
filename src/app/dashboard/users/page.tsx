@@ -2,6 +2,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import UserRow from '@/components/users/UserRow'
 import Link from 'next/link'
+import { Users } from 'lucide-react'
 
 export default async function UsersPage() {
   const supabase = await createClient()
@@ -32,55 +33,62 @@ export default async function UsersPage() {
   ).length
 
   return (
-    <div className="max-w-5xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-stone-800">Kullanıcılar</h1>
-        <p className="text-stone-500 text-sm mt-1">
+    <div>
+      <div className="mb-10">
+        <p className="text-rose-500 text-xs font-semibold tracking-widest uppercase mb-2">Yönetim</p>
+        <h1 className="font-serif text-4xl text-stone-900 mb-2">Kullanıcılar</h1>
+        <p className="text-stone-400 text-sm">
           {coupleCount} çift hesabı
           {unassignedCount > 0 && (
-            <span className="ml-2 text-amber-600 font-medium">
-              · {unassignedCount} henüz düğüne atanmamış
-            </span>
+            <span className="ml-2 text-amber-600 font-medium">· {unassignedCount} düğüne atanmamış</span>
           )}
         </p>
       </div>
 
       {unassignedCount > 0 && (
-        <div className="mb-6 px-4 py-3 bg-amber-50 border border-amber-100 rounded-xl text-sm text-amber-700">
-          Atanmamış kullanıcıları düğüne bağlamak için{' '}
-          <Link href="/dashboard/weddings" className="font-medium underline underline-offset-2">
-            düğün sayfasına gidin
-          </Link>{' '}
-          ve "Çift Hesapları" bölümünden kullanıcı seçin.
+        <div className="mb-6 flex items-start gap-3 px-5 py-4 bg-amber-50 border border-amber-100 rounded-2xl text-sm text-amber-700">
+          <span className="text-lg shrink-0">⚠️</span>
+          <p>
+            Atanmamış kullanıcıları bir düğüne bağlamak için{' '}
+            <Link href="/dashboard/weddings" className="font-semibold underline underline-offset-2">
+              düğün sayfasına gidin
+            </Link>{' '}
+            ve &ldquo;Çift Hesapları&rdquo; bölümünden atama yapın.
+          </p>
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-stone-100 text-left">
-              <th className="px-6 py-3 text-xs font-medium text-stone-400 uppercase tracking-wide">Kullanıcı</th>
-              <th className="px-6 py-3 text-xs font-medium text-stone-400 uppercase tracking-wide">Rol</th>
-              <th className="px-6 py-3 text-xs font-medium text-stone-400 uppercase tracking-wide">Düğün</th>
-              <th className="px-6 py-3 text-xs font-medium text-stone-400 uppercase tracking-wide">Rol Değiştir</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-stone-100">
-            {(users ?? []).map((u) => (
-              <UserRow
-                key={u.id}
-                user={u}
-                weddings={weddings ?? []}
-                userAssignments={assignmentsByUser[u.id] ?? []}
-                currentUserId={me?.id ?? ''}
-              />
-            ))}
-          </tbody>
-        </table>
-        {(!users || users.length === 0) && (
-          <div className="px-6 py-12 text-center text-stone-400 text-sm">
-            Henüz kayıtlı kullanıcı yok.
+      <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
+        {(!users || users.length === 0) ? (
+          <div className="px-8 py-20 text-center">
+            <div className="w-16 h-16 bg-violet-50 rounded-full flex items-center justify-center mx-auto mb-5">
+              <Users size={24} className="text-violet-300" />
+            </div>
+            <p className="font-serif text-xl text-stone-600 mb-2">Henüz kullanıcı yok</p>
+            <p className="text-stone-400 text-sm">Çiftler kayıt olduktan sonra burada listelenecek.</p>
           </div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-stone-100 bg-stone-50/60 text-left">
+                <th className="px-7 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider">Kullanıcı</th>
+                <th className="px-7 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider">Rol</th>
+                <th className="px-7 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider">Düğün</th>
+                <th className="px-7 py-4 text-xs font-semibold text-stone-400 uppercase tracking-wider">Rol Değiştir</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-50">
+              {(users ?? []).map((u) => (
+                <UserRow
+                  key={u.id}
+                  user={u}
+                  weddings={weddings ?? []}
+                  userAssignments={assignmentsByUser[u.id] ?? []}
+                  currentUserId={me?.id ?? ''}
+                />
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>

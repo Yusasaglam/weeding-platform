@@ -16,10 +16,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (profile?.role !== 'admin') redirect('/auth/redirect')
 
   return (
-    <div className="flex h-screen overflow-hidden bg-stone-50">
+    <div className="flex h-screen overflow-hidden bg-cream-50">
       <AdminSidebar user={profile} />
       <main className="flex-1 overflow-y-auto">
-        <div className="px-8 py-8">{children}</div>
+        <div className="max-w-5xl mx-auto px-8 py-10">{children}</div>
       </main>
     </div>
   )

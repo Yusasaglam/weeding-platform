@@ -1,7 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, Plus } from 'lucide-react'
+import { ChevronLeft, Plus, FolderOpen, ChevronRight } from 'lucide-react'
 
 interface Props { params: Promise<{ weddingId: string }> }
 
@@ -17,38 +17,60 @@ export default async function AlbumsIndexPage({ params }: Props) {
   if (!wedding) notFound()
 
   return (
-    <div className="max-w-5xl">
-      <Link href={`/dashboard/weddings/${weddingId}`} className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800 transition-colors mb-6">
+    <div>
+      <Link href={`/dashboard/weddings/${weddingId}`} className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors mb-8">
         <ChevronLeft size={14} /> {wedding.title}
       </Link>
 
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold text-stone-800">Albümler</h1>
-        <Link href={`/dashboard/weddings/${weddingId}/albums/new`}
-          className="flex items-center gap-1.5 px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white text-sm font-medium rounded-xl transition-colors">
-          <Plus size={14} /> Yeni Albüm
+      <div className="flex items-start justify-between mb-10">
+        <div>
+          <h1 className="font-serif text-4xl text-stone-900 mb-2">Albümler</h1>
+          <p className="text-stone-400 text-sm">{albums?.length ?? 0} albüm · {wedding.title}</p>
+        </div>
+        <Link
+          href={`/dashboard/weddings/${weddingId}/albums/new`}
+          className="inline-flex items-center gap-2 px-5 py-3 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-2xl transition-colors shadow-sm shadow-rose-100 mt-1"
+        >
+          <Plus size={15} /> Yeni Albüm
         </Link>
       </div>
 
-      <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
+      <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
         {!albums || albums.length === 0 ? (
-          <div className="px-6 py-16 text-center">
-            <p className="text-sm text-stone-400 mb-3">Henüz albüm yok.</p>
-            <Link href={`/dashboard/weddings/${weddingId}/albums/new`} className="text-sm text-stone-700 underline underline-offset-2">
-              İlk albümü oluştur
+          <div className="px-8 py-20 text-center">
+            <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-5">
+              <FolderOpen size={24} className="text-amber-400" />
+            </div>
+            <p className="font-serif text-xl text-stone-700 mb-2">Henüz albüm yok</p>
+            <p className="text-stone-400 text-sm mb-7 max-w-xs mx-auto">Fotoğraflarınızı organize etmek için albüm oluşturun.</p>
+            <Link
+              href={`/dashboard/weddings/${weddingId}/albums/new`}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-2xl transition-colors"
+            >
+              <Plus size={15} /> İlk Albümü Oluştur
             </Link>
           </div>
         ) : (
-          <ul className="divide-y divide-stone-100">
+          <ul className="divide-y divide-stone-50">
             {albums.map((a) => (
               <li key={a.id}>
-                <Link href={`/dashboard/weddings/${weddingId}/albums/${a.id}`}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-stone-50 transition-colors">
-                  <div>
-                    <p className="text-sm font-medium text-stone-800">{a.title}</p>
-                    {a.description && <p className="text-xs text-stone-400 mt-0.5">{a.description}</p>}
+                <Link
+                  href={`/dashboard/weddings/${weddingId}/albums/${a.id}`}
+                  className="flex items-center justify-between px-7 py-4 hover:bg-stone-50/60 transition-colors group"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-amber-100 transition-colors">
+                      <FolderOpen size={15} className="text-amber-500" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-stone-800 group-hover:text-stone-900">{a.title}</p>
+                      {a.description && <p className="text-xs text-stone-400 mt-0.5">{a.description}</p>}
+                    </div>
                   </div>
-                  <VisibilityBadge visibility={a.visibility} />
+                  <div className="flex items-center gap-3">
+                    <VisibilityBadge visibility={a.visibility} />
+                    <ChevronRight size={14} className="text-stone-300 group-hover:text-stone-500 transition-colors" />
+                  </div>
                 </Link>
               </li>
             ))}
