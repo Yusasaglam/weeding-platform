@@ -3,14 +3,14 @@
 import { motion } from 'framer-motion'
 
 const features = [
-  { icon: '⚡', title: 'Anında Yükleme', desc: 'Fotoğraf ve videolar saniyeler içinde galerinize ulaşır. Gerçek zamanlı senkronizasyon.' },
-  { icon: '🎬', title: 'Video Desteği', desc: 'Fotoğrafların yanı sıra yüksek kaliteli video yüklemesi. Sınırsız format desteği.' },
-  { icon: '🔒', title: 'Gizli Galeri', desc: 'Her misafir yalnızca kendi yüklediklerini görür. Mahremiyeti koruyarak paylaşım.' },
-  { icon: '📱', title: 'Uygulama Gerekmez', desc: 'Misafirler sadece kamerayı açar ve QR\'ı tarar. Tek tıkla galeri açılır.' },
-  { icon: '💾', title: 'Güvenli Depolama', desc: 'Tüm içerikler şifreli bulutta saklanır. Düğününüzden sonra da erişilebilir.' },
-  { icon: '📥', title: 'Toplu İndirme', desc: 'Tüm fotoğrafları tek tıkla bilgisayarınıza indirin. Albüm bazlı seçim imkânı.' },
-  { icon: '🎨', title: 'Albüm Yönetimi', desc: 'Fotoğrafları albümlere ayırın, sıralayın ve misafir görünürlüğünü yönetin.' },
-  { icon: '❤️', title: 'Favoriler', desc: 'En güzel kareleri favorileyin, özel koleksiyon oluşturun.' },
+  { title: 'Anında Yükleme', desc: 'Fotoğraf ve videolar saniyeler içinde galerinize ulaşır.' },
+  { title: 'Video Desteği', desc: 'Yüksek kaliteli video yüklemesi. Sınırsız format desteği.' },
+  { title: 'Gizli Galeri', desc: 'Her misafir yalnızca kendi yüklediklerini görür.' },
+  { title: 'Uygulama Gerekmez', desc: 'Sadece QR\'ı tara, galeri anında açılır.' },
+  { title: 'Güvenli Depolama', desc: 'Tüm içerikler şifreli bulutta saklanır.' },
+  { title: 'Toplu İndirme', desc: 'Tüm fotoğrafları tek tıkla bilgisayarınıza indirin.' },
+  { title: 'Albüm Yönetimi', desc: 'Fotoğrafları albümlere ayırın ve yönetin.' },
+  { title: 'Favoriler', desc: 'En güzel kareleri favorileyin, koleksiyon oluşturun.' },
 ]
 
 export default function Features() {
@@ -22,30 +22,23 @@ export default function Features() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16"
         >
-          <p className="text-amber-500 text-xs font-semibold tracking-widest uppercase mb-4">Özellikler</p>
-          <h2 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">İhtiyacınız olan her şey</h2>
-          <p className="text-stone-400 text-lg max-w-xl mx-auto">
-            Düğün galerisini yönetmek hiç bu kadar kolay olmamıştı.
-          </p>
+          <p className="text-[11px] tracking-[0.3em] uppercase text-stone-400 mb-4">Özellikler</p>
+          <h2 className="font-serif text-4xl md:text-5xl text-stone-900">İhtiyacınız olan her şey</h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
           {features.map((f, i) => (
             <motion.div
               key={f.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.07, duration: 0.5 }}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="bg-stone-50 rounded-2xl p-6 border border-stone-100 hover:border-amber-200 hover:bg-amber-50/30 transition-all group"
+              transition={{ delay: i * 0.06, duration: 0.5 }}
             >
-              <div className="w-10 h-10 bg-stone-900 rounded-xl flex items-center justify-center mb-4 text-lg group-hover:bg-amber-400 transition-colors">
-                {f.icon}
-              </div>
-              <h3 className="font-semibold text-stone-900 mb-2">{f.title}</h3>
+              <div className="w-px h-8 bg-stone-200 mb-4" />
+              <h3 className="font-medium text-stone-900 mb-2">{f.title}</h3>
               <p className="text-stone-400 text-sm leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
