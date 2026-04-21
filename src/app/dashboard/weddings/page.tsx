@@ -11,17 +11,22 @@ export default async function WeddingsPage() {
 
   return (
     <div>
-      <div className="flex items-start justify-between mb-10">
+      <div className="flex items-start justify-between mb-10 gap-4 flex-wrap">
         <div>
           <p className="text-rose-500 text-xs font-semibold tracking-widest uppercase mb-2">Yönetim</p>
-          <h1 className="font-serif text-4xl text-stone-900 mb-2">Düğünler</h1>
+          <h1 className="font-serif text-3xl md:text-4xl text-stone-900 mb-1">Düğünler</h1>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-px w-6 bg-rose-300" />
+            <span className="text-rose-300 text-xs">✦</span>
+            <div className="h-px w-6 bg-rose-300" />
+          </div>
           <p className="text-stone-400 text-sm">
             {weddings?.length ?? 0} düğün etkinliği
           </p>
         </div>
         <Link
           href="/dashboard/weddings/new"
-          className="inline-flex items-center gap-2 px-5 py-3 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-2xl transition-colors shadow-sm shadow-rose-100 mt-1"
+          className="inline-flex items-center gap-2 px-5 py-3 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-2xl transition-colors shadow-sm shadow-rose-100 shrink-0"
         >
           <Plus size={15} />
           Yeni Düğün

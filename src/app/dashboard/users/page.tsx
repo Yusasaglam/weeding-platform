@@ -36,7 +36,12 @@ export default async function UsersPage() {
     <div>
       <div className="mb-10">
         <p className="text-rose-500 text-xs font-semibold tracking-widest uppercase mb-2">Yönetim</p>
-        <h1 className="font-serif text-4xl text-stone-900 mb-2">Kullanıcılar</h1>
+        <h1 className="font-serif text-3xl md:text-4xl text-stone-900 mb-1">Kullanıcılar</h1>
+        <div className="flex items-center gap-2 mb-2">
+          <div className="h-px w-6 bg-rose-300" />
+          <span className="text-rose-300 text-xs">✦</span>
+          <div className="h-px w-6 bg-rose-300" />
+        </div>
         <p className="text-stone-400 text-sm">
           {coupleCount} çift hesabı
           {unassignedCount > 0 && (
@@ -58,7 +63,7 @@ export default async function UsersPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm overflow-x-auto">
         {(!users || users.length === 0) ? (
           <div className="px-8 py-20 text-center">
             <div className="w-16 h-16 bg-violet-50 rounded-full flex items-center justify-center mx-auto mb-5">

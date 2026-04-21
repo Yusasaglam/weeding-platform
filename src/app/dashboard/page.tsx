@@ -26,7 +26,12 @@ export default async function DashboardPage() {
       {/* Page header */}
       <div className="mb-8">
         <p className="text-rose-500 text-xs font-semibold tracking-widest uppercase mb-2">Hoş Geldiniz</p>
-        <h1 className="font-serif text-3xl md:text-4xl text-stone-900 mb-2">Genel Bakış</h1>
+        <h1 className="font-serif text-3xl md:text-4xl text-stone-900 mb-1">Genel Bakış</h1>
+        <div className="flex items-center gap-2 mb-2">
+          <div className="h-px w-6 bg-rose-300" />
+          <span className="text-rose-300 text-xs">✦</span>
+          <div className="h-px w-6 bg-rose-300" />
+        </div>
         <p className="text-stone-400 text-sm">Platformdaki tüm düğün etkinliklerini buradan yönetin.</p>
       </div>
 

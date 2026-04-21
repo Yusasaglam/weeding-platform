@@ -48,9 +48,14 @@ export default async function WeddingDetailPage({ params }: Props) {
       {/* Header */}
       <div className="flex items-start justify-between mb-8 flex-wrap gap-3">
         <div>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-1 flex-wrap">
             <h1 className="font-serif text-2xl md:text-4xl text-stone-900">{wedding.title}</h1>
             <StatusBadge status={wedding.status} />
+          </div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-px w-6 bg-rose-300" />
+            <span className="text-rose-300 text-xs">✦</span>
+            <div className="h-px w-6 bg-rose-300" />
           </div>
           <p className="text-stone-400 text-sm">
             {wedding.bride_name} & {wedding.groom_name}
