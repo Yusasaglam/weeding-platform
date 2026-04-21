@@ -24,9 +24,14 @@ export default async function AlbumDetailPage({ params }: Props) {
         <ChevronLeft size={14} /> {wedding.title}
       </Link>
 
-      <div className="flex items-start justify-between mb-10">
+      <div className="flex items-start justify-between mb-8 flex-wrap gap-3">
         <div>
-          <h1 className="font-serif text-4xl text-stone-900 mb-2">{album.title}</h1>
+          <h1 className="font-serif text-3xl md:text-4xl text-stone-900 mb-1">{album.title}</h1>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-px w-6 bg-rose-300" />
+            <span className="text-rose-300 text-xs">✦</span>
+            <div className="h-px w-6 bg-rose-300" />
+          </div>
           <div className="flex items-center gap-3">
             {album.description && <p className="text-stone-400 text-sm">{album.description}</p>}
             <VisibilityBadge visibility={album.visibility} />

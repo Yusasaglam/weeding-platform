@@ -55,33 +55,33 @@ export default async function CoupleDashboardPage({ params }: Props) {
   const totalPhotos = (allMedia ?? []).length
 
   return (
-    <div className="max-w-4xl mx-auto px-4 md:px-8 py-8 space-y-1">
+    <div className="max-w-4xl mx-auto px-4 md:px-8">
 
-      {/* Hero — full-width editorial banner */}
-      <div className="pt-6 pb-10 border-b border-stone-100">
-        <p className="text-[10px] tracking-[0.3em] uppercase text-stone-400 mb-4">Düğün Galerisi</p>
-        <h1 className="font-serif text-5xl md:text-6xl text-stone-950 leading-none mb-6">
+      {/* Wedding hero */}
+      <div className="pt-6 md:pt-8 pb-6 border-b border-stone-100">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-stone-400 mb-3">Düğün Galerisi</p>
+        <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-stone-950 leading-none mb-4">
           {wedding?.bride_name && wedding?.groom_name
             ? `${wedding.bride_name} & ${wedding.groom_name}`
             : wedding?.title ?? 'Düğünüm'}
         </h1>
-        <div className="flex flex-wrap items-center gap-6">
+        <div className="flex flex-wrap items-center gap-4 md:gap-6">
           {wedding?.event_date && (
-            <div className="flex items-center gap-2 text-stone-400 text-sm">
-              <Calendar size={13} className="shrink-0" />
+            <div className="flex items-center gap-2 text-stone-400 text-xs md:text-sm">
+              <Calendar size={12} className="shrink-0" />
               {new Date(wedding.event_date).toLocaleDateString('tr-TR', {
                 day: 'numeric', month: 'long', year: 'numeric',
               })}
             </div>
           )}
           {wedding?.venue && (
-            <div className="flex items-center gap-2 text-stone-400 text-sm">
-              <MapPin size={13} className="shrink-0" />
+            <div className="flex items-center gap-2 text-stone-400 text-xs md:text-sm">
+              <MapPin size={12} className="shrink-0" />
               {wedding.venue}
             </div>
           )}
-          <div className="flex items-center gap-2 text-stone-300 text-sm ml-auto">
-            <Images size={13} className="shrink-0" />
+          <div className="flex items-center gap-2 text-stone-300 text-xs md:text-sm ml-auto">
+            <Images size={12} className="shrink-0" />
             {totalPhotos} fotoğraf
           </div>
         </div>
@@ -89,24 +89,24 @@ export default async function CoupleDashboardPage({ params }: Props) {
 
       {/* QR Kodlar */}
       {tokens.length > 0 && (
-        <section className="py-8 border-b border-stone-100">
-          <div className="flex items-center justify-between mb-6">
+        <section className="py-6 md:py-8 border-b border-stone-100">
+          <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="font-serif text-2xl text-stone-900">Misafir QR Kodları</h2>
-              <p className="text-xs text-stone-400 mt-1">Misafirlerinize paylaşın — fotoğraf yüklesinler</p>
+              <h2 className="font-serif text-xl md:text-2xl text-stone-900 mb-1">Misafir QR Kodları</h2>
+              <p className="text-xs text-stone-400">Misafirlerinize paylaşın — fotoğraf yüklesinler</p>
             </div>
-            <QrCode size={18} className="text-stone-200" />
+            <QrCode size={16} className="text-stone-200 shrink-0" />
           </div>
           <CoupleQrList tokens={tokens} albums={albums} appUrl={appUrl} />
         </section>
       )}
 
       {/* Fotoğraflar */}
-      <section className="py-8">
-        <div className="flex items-center justify-between mb-6">
+      <section className="py-6 md:py-8 pb-10">
+        <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-serif text-2xl text-stone-900">Fotoğraflar</h2>
-            <p className="text-xs text-stone-400 mt-1">
+            <h2 className="font-serif text-xl md:text-2xl text-stone-900 mb-1">Fotoğraflar</h2>
+            <p className="text-xs text-stone-400">
               {totalPhotos > 0 ? `${totalPhotos} fotoğraf · ${albums.length} albüm` : 'Henüz fotoğraf yok'}
             </p>
           </div>

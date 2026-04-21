@@ -43,7 +43,7 @@ export default function CTASection() {
                 href="/register"
                 className="inline-flex items-center justify-center bg-white hover:bg-stone-100 text-stone-900 font-semibold px-8 py-4 rounded-full transition-colors shadow-lg shadow-black/20"
               >
-                Ücretsiz Başla →
+                Hemen Başla →
               </Link>
               <Link
                 href="/pricing"
@@ -52,7 +52,6 @@ export default function CTASection() {
                 Fiyatları Gör
               </Link>
             </div>
-            <p className="text-stone-600 text-xs mt-6">Kredi kartı gerekmez · 14 gün ücretsiz deneme</p>
           </div>
         </motion.div>
       </div>

@@ -8,35 +8,35 @@ const item: Variants = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-white px-6 pt-24 pb-16 overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-white px-5 md:px-6 pt-20 pb-16 overflow-hidden">
       {/* Decorative background dots */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
       {/* Corner ornaments */}
-      <div className="absolute top-28 left-8 w-24 h-24 border-l border-t border-stone-200 pointer-events-none" />
-      <div className="absolute top-28 right-8 w-24 h-24 border-r border-t border-stone-200 pointer-events-none" />
-      <div className="absolute bottom-8 left-8 w-16 h-16 border-l border-b border-stone-100 pointer-events-none" />
-      <div className="absolute bottom-8 right-8 w-16 h-16 border-r border-b border-stone-100 pointer-events-none" />
+      <div className="absolute top-28 left-4 md:left-8 w-16 md:w-24 h-16 md:h-24 border-l border-t border-stone-200 pointer-events-none" />
+      <div className="absolute top-28 right-4 md:right-8 w-16 md:w-24 h-16 md:h-24 border-r border-t border-stone-200 pointer-events-none" />
+      <div className="absolute bottom-8 left-4 md:left-8 w-12 md:w-16 h-12 md:h-16 border-l border-b border-stone-100 pointer-events-none" />
+      <div className="absolute bottom-8 right-4 md:right-8 w-12 md:w-16 h-12 md:h-16 border-r border-b border-stone-100 pointer-events-none" />
       {/* Soft radial glow */}
-      <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-stone-100 rounded-full blur-3xl opacity-40 pointer-events-none" />
+      <div className="absolute top-1/3 left-1/4 w-72 md:w-96 h-72 md:h-96 bg-stone-100 rounded-full blur-3xl opacity-40 pointer-events-none" />
 
-      <div className="relative max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center">
+      <div className="relative max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-10 md:gap-16 items-center">
         <motion.div variants={container} initial="hidden" animate="show">
-          <motion.div variants={item} className="flex items-center gap-3 mb-6">
+          <motion.div variants={item} className="flex items-center gap-3 mb-5 md:mb-6">
             <div className="h-px w-8 bg-stone-300" />
             <p className="text-[11px] tracking-[0.3em] uppercase text-stone-400">
               Türkiye&apos;nin ilk QR düğün galerisi
             </p>
           </motion.div>
 
-          <motion.h1 variants={item} className="font-serif text-5xl md:text-6xl text-stone-950 leading-tight mb-6">
+          <motion.h1 variants={item} className="font-serif text-4xl sm:text-5xl md:text-6xl text-stone-950 leading-tight mb-5 md:mb-6">
             Düğününüzün<br />
             her anını<br />
             <span className="italic text-stone-400">yaşayın</span>
           </motion.h1>
 
-          <motion.p variants={item} className="text-stone-400 text-lg leading-relaxed mb-10 max-w-md">
+          <motion.p variants={item} className="text-stone-400 text-base md:text-lg leading-relaxed mb-8 md:mb-10 max-w-md">
             Misafirleriniz QR kodu tarar, fotoğraf ve videolarını yükler.
             Siz de özel panelinizden tüm anıları görüntüler, indirirsiniz.
           </motion.p>
@@ -44,36 +44,35 @@ export default function Hero() {
           <motion.div variants={item} className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/register"
-              className="inline-flex items-center justify-center gap-2 bg-stone-900 hover:bg-stone-700 text-white text-sm font-semibold px-8 py-4 rounded-full transition-colors shadow-lg shadow-stone-200"
+              className="inline-flex items-center justify-center gap-2 bg-stone-900 hover:bg-stone-700 text-white text-sm font-semibold px-7 py-4 rounded-full transition-colors shadow-lg shadow-stone-200"
             >
-              Ücretsiz Dene →
+              Hemen Başla →
             </Link>
             <Link
               href="#how-it-works"
-              className="inline-flex items-center justify-center gap-2 border border-stone-200 text-stone-600 hover:bg-stone-50 text-sm font-medium px-8 py-4 rounded-full transition-colors"
+              className="inline-flex items-center justify-center gap-2 border border-stone-200 text-stone-600 hover:bg-stone-50 text-sm font-medium px-7 py-4 rounded-full transition-colors"
             >
               Nasıl çalışır?
             </Link>
           </motion.div>
 
-          <motion.div variants={item} className="flex items-center gap-8 mt-10 pt-8 border-t border-stone-100">
+          <motion.div variants={item} className="grid grid-cols-3 gap-4 mt-10 pt-8 border-t border-stone-100">
             {[['500+', 'Mutlu çift'], ['50K+', 'Yüklenen fotoğraf'], ['4.9★', 'Müşteri puanı']].map(([val, label]) => (
-              <div key={label} className="text-center">
-                <p className="font-serif text-2xl text-stone-900">{val}</p>
+              <div key={label}>
+                <p className="font-serif text-xl md:text-2xl text-stone-900">{val}</p>
                 <p className="text-xs text-stone-400 mt-0.5">{label}</p>
               </div>
             ))}
           </motion.div>
         </motion.div>
 
-        {/* Phone mockup */}
+        {/* Phone mockup — hidden on small screens, shown md+ */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="relative flex justify-center"
+          className="relative hidden md:flex justify-center"
         >
-          {/* Decorative ring behind phone */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-stone-100 rounded-full" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 border border-stone-50 rounded-full" />
 
@@ -94,7 +93,7 @@ export default function Hero() {
                   <div className="grid grid-cols-3 gap-1 mb-3">
                     {['bg-stone-100','bg-stone-200','bg-stone-100','bg-stone-200','bg-stone-100','bg-stone-200'].map((c, i) => (
                       <div key={i} className={`aspect-square rounded-lg ${c} flex items-center justify-center`}>
-                        <span className="text-lg opacity-40">🌸</span>
+                        <span className="text-lg opacity-30">🌸</span>
                       </div>
                     ))}
                   </div>
@@ -133,7 +132,6 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-stone-50/50 to-transparent pointer-events-none" />
     </section>
   )

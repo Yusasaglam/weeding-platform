@@ -1,6 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import Link from 'next/link'
-import { Heart, Image, Users, ArrowRight, Plus } from 'lucide-react'
+import { Heart, Image, Users, ArrowRight, Plus, TrendingUp } from 'lucide-react'
 
 export default async function DashboardPage() {
   const admin = createAdminClient()
@@ -24,8 +24,8 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* Page header */}
-      <div className="mb-8">
-        <p className="text-rose-500 text-xs font-semibold tracking-widest uppercase mb-2">Hoş Geldiniz</p>
+      <div className="mb-8 md:mb-10">
+        <p className="text-rose-500 text-[10px] md:text-xs font-semibold tracking-widest uppercase mb-2">Hoş Geldiniz</p>
         <h1 className="font-serif text-3xl md:text-4xl text-stone-900 mb-1">Genel Bakış</h1>
         <div className="flex items-center gap-2 mb-2">
           <div className="h-px w-6 bg-rose-300" />
@@ -36,34 +36,37 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-8">
         <StatCard
           label="Düğün"
           value={weddingCount ?? 0}
-          icon={<Heart size={20} className="text-rose-500" />}
+          icon={<Heart size={18} className="text-rose-500" />}
           bg="bg-rose-50"
           href="/dashboard/weddings"
+          trend="+2 bu ay"
         />
         <StatCard
           label="Medya Dosyası"
           value={mediaCount ?? 0}
-          icon={<Image size={20} className="text-sky-500" />}
+          icon={<Image size={18} className="text-sky-500" />}
           bg="bg-sky-50"
+          trend="toplam"
         />
         <StatCard
           label="Kullanıcı"
           value={userCount ?? 0}
-          icon={<Users size={20} className="text-violet-500" />}
+          icon={<Users size={18} className="text-violet-500" />}
           bg="bg-violet-50"
           href="/dashboard/users"
+          trend="kayıtlı"
         />
       </div>
 
       {/* Recent weddings */}
-      <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl md:rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
         <div className="flex items-center justify-between px-5 md:px-7 py-4 border-b border-stone-100">
           <div>
-            <h2 className="font-serif text-lg text-stone-900">Son Düğünler</h2>
+            <h2 className="font-serif text-base md:text-lg text-stone-900">Son Düğünler</h2>
             <p className="text-xs text-stone-400 mt-0.5">En son oluşturulan etkinlikler</p>
           </div>
           <Link
@@ -80,15 +83,15 @@ export default async function DashboardPage() {
               <li key={w.id}>
                 <Link
                   href={`/dashboard/weddings/${w.id}`}
-                  className="flex items-center justify-between px-5 md:px-7 py-4 hover:bg-stone-50/60 transition-colors group"
+                  className="flex items-center justify-between px-5 md:px-7 py-3.5 md:py-4 hover:bg-stone-50/60 transition-colors group"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-9 h-9 bg-rose-50 rounded-xl flex items-center justify-center shrink-0">
-                      <Heart size={14} className="text-rose-400" />
+                  <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                    <div className="w-8 h-8 md:w-9 md:h-9 bg-rose-50 rounded-xl flex items-center justify-center shrink-0">
+                      <Heart size={13} className="text-rose-400" />
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-stone-800 group-hover:text-stone-900">{w.title}</p>
-                      <p className="text-xs text-stone-400 mt-0.5">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-stone-800 group-hover:text-stone-900 truncate">{w.title}</p>
+                      <p className="text-xs text-stone-400 mt-0.5 truncate">
                         {w.bride_name} & {w.groom_name}
                         {w.event_date && ` · ${new Date(w.event_date).toLocaleDateString('tr-TR')}`}
                       </p>
@@ -100,9 +103,9 @@ export default async function DashboardPage() {
             ))}
           </ul>
         ) : (
-          <div className="px-7 py-16 text-center">
-            <div className="w-14 h-14 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Heart size={20} className="text-rose-300" />
+          <div className="px-6 md:px-7 py-14 md:py-16 text-center">
+            <div className="w-12 h-12 md:w-14 md:h-14 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Heart size={18} className="text-rose-300" />
             </div>
             <p className="text-stone-500 text-sm mb-1">Henüz düğün yok.</p>
             <p className="text-stone-400 text-xs mb-5">İlk düğün etkinliğini oluşturarak başlayın.</p>
@@ -120,16 +123,24 @@ export default async function DashboardPage() {
 }
 
 function StatCard({
-  label, value, icon, bg, href,
+  label, value, icon, bg, href, trend,
 }: {
-  label: string; value: number; icon: React.ReactNode; bg: string; href?: string
+  label: string; value: number; icon: React.ReactNode; bg: string; href?: string; trend?: string
 }) {
   const inner = (
-    <div className={`bg-white rounded-3xl border border-stone-100 px-7 py-6 shadow-sm hover:shadow-md transition-shadow ${href ? 'cursor-pointer' : ''}`}>
-      <div className={`w-11 h-11 ${bg} rounded-2xl flex items-center justify-center mb-4`}>
-        {icon}
+    <div className={`bg-white rounded-2xl md:rounded-3xl border border-stone-100 px-5 md:px-7 py-5 md:py-6 shadow-sm hover:shadow-md transition-shadow ${href ? 'cursor-pointer' : ''}`}>
+      <div className="flex items-start justify-between mb-3 md:mb-4">
+        <div className={`w-10 h-10 md:w-11 md:h-11 ${bg} rounded-xl md:rounded-2xl flex items-center justify-center`}>
+          {icon}
+        </div>
+        {trend && (
+          <div className="flex items-center gap-1 text-[10px] text-stone-400 bg-stone-50 px-2 py-1 rounded-full">
+            <TrendingUp size={9} />
+            {trend}
+          </div>
+        )}
       </div>
-      <p className="font-serif text-4xl text-stone-900 mb-1">{value}</p>
+      <p className="font-serif text-3xl md:text-4xl text-stone-900 mb-1">{value}</p>
       <p className="text-xs text-stone-400 font-medium">{label}</p>
     </div>
   )
@@ -147,7 +158,7 @@ function StatusBadge({ status }: { status: string }) {
     draft: 'Taslak', active: 'Aktif', delivered: 'Teslim edildi', archived: 'Arşiv',
   }
   return (
-    <span className={`text-xs px-3 py-1 rounded-full font-medium shrink-0 ${styles[status] ?? styles.draft}`}>
+    <span className={`text-xs px-2.5 py-1 rounded-full font-medium shrink-0 ml-2 ${styles[status] ?? styles.draft}`}>
       {labels[status] ?? status}
     </span>
   )
