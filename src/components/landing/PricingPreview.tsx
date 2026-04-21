@@ -32,7 +32,7 @@ const plans = [
 
 export default function PricingPreview() {
   return (
-    <section className="py-28 bg-[#fffbf7] px-6">
+    <section className="py-28 bg-white px-6">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -41,7 +41,7 @@ export default function PricingPreview() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-rose-500 text-sm font-medium tracking-widest uppercase mb-3">Fiyatlar</p>
+          <p className="text-amber-500 text-xs font-semibold tracking-widest uppercase mb-4">Fiyatlar</p>
           <h2 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">Düğününüze özel plan</h2>
           <p className="text-stone-400 text-lg">Tek seferlik ödeme. Abonelik yok.</p>
         </motion.div>
@@ -56,12 +56,12 @@ export default function PricingPreview() {
               transition={{ delay: i * 0.1, duration: 0.6 }}
               className={`relative rounded-3xl p-8 flex flex-col ${
                 plan.highlight
-                  ? 'bg-stone-900 text-white shadow-2xl shadow-stone-400/20 scale-105'
-                  : 'bg-white border border-stone-100 shadow-sm'
+                  ? 'bg-stone-950 text-white shadow-2xl shadow-stone-300/10 scale-105 border border-amber-400/20'
+                  : 'bg-stone-50 border border-stone-100'
               }`}
             >
               {plan.highlight && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-xs font-semibold px-4 py-1.5 rounded-full">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-amber-400 text-stone-950 text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap">
                   En Popüler
                 </div>
               )}
@@ -69,16 +69,16 @@ export default function PricingPreview() {
               <div className="mb-6">
                 <p className={`text-sm font-medium mb-1 ${plan.highlight ? 'text-stone-400' : 'text-stone-500'}`}>{plan.name}</p>
                 <div className="flex items-end gap-1">
-                  <span className="font-serif text-4xl text-inherit">{plan.price}₺</span>
-                  <span className={`text-sm mb-1.5 ${plan.highlight ? 'text-stone-400' : 'text-stone-400'}`}>/etkinlik</span>
+                  <span className={`font-serif text-4xl ${plan.highlight ? 'text-amber-400' : 'text-stone-900'}`}>{plan.price}₺</span>
+                  <span className="text-sm mb-1.5 text-stone-400">/etkinlik</span>
                 </div>
-                <p className={`text-sm mt-1 ${plan.highlight ? 'text-stone-400' : 'text-stone-400'}`}>{plan.desc}</p>
+                <p className="text-sm mt-1 text-stone-400">{plan.desc}</p>
               </div>
 
               <ul className="space-y-3 mb-8 flex-1">
                 {plan.features.map((f) => (
                   <li key={f} className={`flex items-center gap-2.5 text-sm ${plan.highlight ? 'text-stone-300' : 'text-stone-600'}`}>
-                    <span className="text-rose-400 flex-shrink-0">✓</span>
+                    <span className="text-amber-400 shrink-0">✓</span>
                     {f}
                   </li>
                 ))}
@@ -88,8 +88,8 @@ export default function PricingPreview() {
                 href="/register"
                 className={`w-full text-center py-3.5 rounded-xl text-sm font-semibold transition-colors ${
                   plan.highlight
-                    ? 'bg-rose-500 hover:bg-rose-600 text-white'
-                    : 'bg-stone-100 hover:bg-stone-200 text-stone-800'
+                    ? 'bg-amber-400 hover:bg-amber-300 text-stone-950'
+                    : 'bg-stone-900 hover:bg-stone-800 text-white'
                 }`}
               >
                 {plan.cta}

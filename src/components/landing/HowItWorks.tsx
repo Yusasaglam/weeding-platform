@@ -17,33 +17,32 @@ const steps = [
   },
   {
     number: '03',
-    icon: '💝',
+    icon: '✦',
     title: 'Siz İncelersiniz',
-    desc: 'Panelinizde tüm içerikleri görün, albümlere ayırın, favorileyin ve yükseltin. Her şey güvenle saklanır.',
+    desc: 'Panelinizde tüm içerikleri görün, albümlere ayırın, favorileyin ve indirin. Her şey güvenle saklanır.',
   },
 ]
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-28 bg-white px-6">
-      <div className="max-w-6xl mx-auto">
+    <section id="how-it-works" className="py-28 bg-stone-950 px-6 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,#1c1408_0%,transparent_70%)] pointer-events-none" />
+
+      <div className="relative max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <p className="text-rose-500 text-sm font-medium tracking-widest uppercase mb-3">Nasıl Çalışır?</p>
-          <h2 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">Üç adımda hazır</h2>
-          <p className="text-stone-400 text-lg max-w-xl mx-auto">
-            Kurulum 5 dakika, anılar ömür boyu.
-          </p>
+          <p className="text-amber-400 text-xs font-semibold tracking-widest uppercase mb-4">Nasıl Çalışır?</p>
+          <h2 className="font-serif text-4xl md:text-5xl text-white mb-4">Üç adımda hazır</h2>
+          <p className="text-stone-500 text-lg max-w-xl mx-auto">Kurulum 5 dakika, anılar ömür boyu.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 relative">
-          {/* connector line */}
-          <div className="hidden md:block absolute top-12 left-[calc(16.6%+2rem)] right-[calc(16.6%+2rem)] h-px bg-gradient-to-r from-rose-100 via-rose-200 to-rose-100" />
+          <div className="hidden md:block absolute top-10 left-[calc(16.6%+3rem)] right-[calc(16.6%+3rem)] h-px bg-linear-to-r from-amber-400/10 via-amber-400/30 to-amber-400/10" />
 
           {steps.map((step, i) => (
             <motion.div
@@ -52,15 +51,17 @@ export default function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15, duration: 0.6 }}
-              className="relative text-center"
+              className="relative text-center group"
             >
-              <div className="w-24 h-24 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-4xl border border-rose-100 shadow-sm">
-                {step.icon}
+              <div className="relative w-20 h-20 mx-auto mb-6">
+                <div className="w-20 h-20 bg-stone-900 border border-amber-400/20 rounded-2xl flex items-center justify-center text-3xl group-hover:border-amber-400/50 transition-colors">
+                  {step.icon}
+                </div>
+                <span className="absolute -top-2 -right-2 text-[10px] font-bold text-amber-400/60 tracking-widest bg-stone-950 px-1 rounded">
+                  {step.number}
+                </span>
               </div>
-              <span className="absolute top-2 right-[calc(50%-3.5rem)] text-xs font-bold text-rose-200 tracking-widest">
-                {step.number}
-              </span>
-              <h3 className="font-serif text-xl text-stone-900 mb-3">{step.title}</h3>
+              <h3 className="font-serif text-xl text-white mb-3">{step.title}</h3>
               <p className="text-stone-500 text-sm leading-relaxed">{step.desc}</p>
             </motion.div>
           ))}

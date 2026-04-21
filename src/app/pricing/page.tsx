@@ -69,7 +69,7 @@ const featureKeys = Object.keys(plans[0].features)
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-[#fffbf7]">
+    <div className="min-h-screen bg-stone-950">
       <Navbar />
 
       <main className="pt-32 pb-24 px-6">
@@ -81,9 +81,9 @@ export default function PricingPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <p className="text-rose-500 text-sm font-medium tracking-widest uppercase mb-3">Fiyatlar</p>
-            <h1 className="font-serif text-5xl text-stone-900 mb-4">Düğününüze özel plan</h1>
-            <p className="text-stone-400 text-lg">
+            <p className="text-amber-400 text-xs font-semibold tracking-widest uppercase mb-4">Fiyatlar</p>
+            <h1 className="font-serif text-5xl text-white mb-4">Düğününüze özel plan</h1>
+            <p className="text-stone-500 text-lg">
               Tek seferlik ödeme. Abonelik yok. İstediğiniz zaman başlayın.
             </p>
           </motion.div>
@@ -98,29 +98,29 @@ export default function PricingPage() {
                 transition={{ delay: i * 0.1, duration: 0.6 }}
                 className={`relative rounded-3xl p-8 flex flex-col ${
                   plan.highlight
-                    ? 'bg-stone-900 text-white shadow-2xl shadow-stone-300/30 scale-105'
-                    : 'bg-white border border-stone-100 shadow-sm'
+                    ? 'bg-stone-900 border border-amber-400/25 shadow-2xl shadow-amber-900/10 scale-105'
+                    : 'bg-stone-900/50 border border-white/6'
                 }`}
               >
                 {plan.highlight && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-xs font-semibold px-4 py-1.5 rounded-full whitespace-nowrap">
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-amber-400 text-stone-950 text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap">
                     En Popüler
                   </div>
                 )}
                 <div className="mb-6">
-                  <p className={`text-sm font-medium mb-1 ${plan.highlight ? 'text-stone-400' : 'text-stone-500'}`}>{plan.name}</p>
+                  <p className="text-sm font-medium mb-1 text-stone-400">{plan.name}</p>
                   <div className="flex items-end gap-1">
-                    <span className="font-serif text-4xl">{plan.price}₺</span>
-                    <span className={`text-sm mb-1.5 ${plan.highlight ? 'text-stone-400' : 'text-stone-400'}`}>/etkinlik</span>
+                    <span className={`font-serif text-4xl ${plan.highlight ? 'text-amber-400' : 'text-white'}`}>{plan.price}₺</span>
+                    <span className="text-sm mb-1.5 text-stone-500">/etkinlik</span>
                   </div>
-                  <p className={`text-sm mt-2 ${plan.highlight ? 'text-stone-400' : 'text-stone-400'}`}>{plan.desc}</p>
+                  <p className="text-sm mt-2 text-stone-500">{plan.desc}</p>
                 </div>
                 <Link
                   href="/register"
                   className={`w-full text-center py-3.5 rounded-xl text-sm font-semibold transition-colors mt-auto ${
                     plan.highlight
-                      ? 'bg-rose-500 hover:bg-rose-600 text-white'
-                      : 'bg-stone-100 hover:bg-stone-200 text-stone-800'
+                      ? 'bg-amber-400 hover:bg-amber-300 text-stone-950'
+                      : 'bg-stone-800 hover:bg-stone-700 text-white'
                   }`}
                 >
                   {plan.cta}
@@ -135,30 +135,30 @@ export default function PricingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-white rounded-3xl border border-stone-100 shadow-sm overflow-hidden"
+            className="bg-stone-900 rounded-3xl border border-white/6 overflow-hidden"
           >
-            <div className="grid grid-cols-4 bg-stone-50 border-b border-stone-100">
-              <div className="px-6 py-4 text-sm font-medium text-stone-700">Özellik</div>
+            <div className="grid grid-cols-4 bg-stone-950/50 border-b border-white/5">
+              <div className="px-6 py-4 text-sm font-medium text-stone-400">Özellik</div>
               {plans.map((p) => (
-                <div key={p.name} className={`px-6 py-4 text-sm font-semibold text-center ${p.highlight ? 'text-rose-500' : 'text-stone-700'}`}>
+                <div key={p.name} className={`px-6 py-4 text-sm font-semibold text-center ${p.highlight ? 'text-amber-400' : 'text-stone-300'}`}>
                   {p.name}
                 </div>
               ))}
             </div>
 
             {featureKeys.map((key, i) => (
-              <div key={key} className={`grid grid-cols-4 ${i % 2 === 0 ? 'bg-white' : 'bg-stone-50/50'} border-b border-stone-50`}>
-                <div className="px-6 py-4 text-sm text-stone-600">{key}</div>
+              <div key={key} className={`grid grid-cols-4 ${i % 2 === 0 ? '' : 'bg-white/2'} border-b border-white/4`}>
+                <div className="px-6 py-4 text-sm text-stone-500">{key}</div>
                 {plans.map((p) => {
                   const val = p.features[key as keyof typeof p.features]
                   return (
                     <div key={p.name} className="px-6 py-4 text-center">
                       {typeof val === 'boolean' ? (
                         val
-                          ? <span className="text-rose-400 text-lg">✓</span>
-                          : <span className="text-stone-200 text-lg">—</span>
+                          ? <span className="text-amber-400 text-lg">✓</span>
+                          : <span className="text-stone-700 text-lg">—</span>
                       ) : (
-                        <span className="text-sm text-stone-700">{val as string}</span>
+                        <span className="text-sm text-stone-300">{val as string}</span>
                       )}
                     </div>
                   )
@@ -175,17 +175,17 @@ export default function PricingPage() {
             transition={{ duration: 0.6 }}
             className="mt-20 text-center"
           >
-            <h2 className="font-serif text-3xl text-stone-900 mb-12">Sık sorulan sorular</h2>
-            <div className="grid md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto">
+            <h2 className="font-serif text-3xl text-white mb-12">Sık sorulan sorular</h2>
+            <div className="grid md:grid-cols-2 gap-4 text-left max-w-3xl mx-auto">
               {[
                 ['Misafirler uygulama indirmek zorunda mı?', 'Hayır. QR kodu tarayınca doğrudan tarayıcıda galeri açılır, hiçbir uygulama gerekmez.'],
                 ['Ödeme güvenli mi?', 'Evet. Tüm ödemeler SSL şifreli altyapı üzerinden gerçekleşir.'],
                 ['Galeri ne zaman hazır olur?', 'Ödemenin ardından anında aktif olur. Hemen QR kodlarınızı oluşturabilirsiniz.'],
                 ['Abonelik var mı?', 'Hayır. Tek seferlik ödeme yaparsınız, gizli ücret yoktur.'],
               ].map(([q, a]) => (
-                <div key={q} className="bg-white rounded-2xl border border-stone-100 p-6 shadow-sm">
-                  <p className="font-medium text-stone-900 mb-2">{q}</p>
-                  <p className="text-stone-400 text-sm leading-relaxed">{a}</p>
+                <div key={q} className="bg-stone-900 rounded-2xl border border-white/6 p-6">
+                  <p className="font-medium text-white mb-2">{q}</p>
+                  <p className="text-stone-500 text-sm leading-relaxed">{a}</p>
                 </div>
               ))}
             </div>
