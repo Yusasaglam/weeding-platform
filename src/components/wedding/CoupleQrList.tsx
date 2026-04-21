@@ -30,9 +30,9 @@ export default function CoupleQrList({ tokens, albums, appUrl }: Props) {
       const canvas = canvasRefs.current[t.id]
       if (!canvas) return
       QRCode.toCanvas(canvas, `${appUrl}/access/${t.token}`, {
-        width: 180,
+        width: 160,
         margin: 2,
-        color: { dark: '#fbbf24', light: '#1c1917' },
+        color: { dark: '#0c0a09', light: '#ffffff' },
       })
     })
   }, [activeTokens, appUrl])
@@ -41,23 +41,19 @@ export default function CoupleQrList({ tokens, albums, appUrl }: Props) {
     const canvas = canvasRefs.current[token.id]
     if (!canvas) return
     await QRCode.toCanvas(canvas, `${appUrl}/access/${token.token}`, {
-      width: 500, margin: 2, color: { dark: '#1c1917', light: '#ffffff' },
+      width: 500, margin: 2, color: { dark: '#0c0a09', light: '#ffffff' },
     })
     const link = document.createElement('a')
     link.download = `qr-${token.label.replace(/\s+/g, '-')}.png`
     link.href = canvas.toDataURL()
     link.click()
     await QRCode.toCanvas(canvas, `${appUrl}/access/${token.token}`, {
-      width: 180, margin: 2, color: { dark: '#fbbf24', light: '#1c1917' },
+      width: 160, margin: 2, color: { dark: '#0c0a09', light: '#ffffff' },
     })
   }
 
   if (activeTokens.length === 0) {
-    return (
-      <p className="text-sm text-stone-500">
-        Henüz aktif QR kod yok. Fotoğrafçınız yakında oluşturacak.
-      </p>
-    )
+    return <p className="text-sm text-stone-300">Henüz aktif QR kod yok.</p>
   }
 
   return (
@@ -68,26 +64,26 @@ export default function CoupleQrList({ tokens, albums, appUrl }: Props) {
           : null
 
         return (
-          <div key={token.id} className="bg-stone-950/60 rounded-2xl border border-white/6 p-5 flex flex-col items-center text-center">
-            <p className="text-sm font-semibold text-white mb-0.5">{token.label}</p>
-            <p className="text-xs text-stone-500 mb-4">{albumTitle ?? 'Tüm misafir galerisi'}</p>
+          <div key={token.id} className="border border-stone-100 rounded-2xl p-5 flex flex-col items-center text-center bg-stone-50">
+            <p className="text-sm font-semibold text-stone-800 mb-0.5">{token.label}</p>
+            <p className="text-xs text-stone-400 mb-4">{albumTitle ?? 'Tüm misafir galerisi'}</p>
 
-            <div className="bg-stone-800 rounded-xl p-3 border border-amber-400/15 mb-4">
+            <div className="bg-white rounded-xl p-3 border border-stone-100 shadow-sm mb-4">
               <canvas
                 ref={(el) => { canvasRefs.current[token.id] = el }}
-                className="block rounded-lg"
+                className="block rounded"
               />
             </div>
 
             {token.expires_at && (
-              <p className="text-[11px] text-stone-600 mb-3">
+              <p className="text-[11px] text-stone-300 mb-3">
                 Bitiş: {new Date(token.expires_at).toLocaleDateString('tr-TR')}
               </p>
             )}
 
             <button
               onClick={() => handleDownload(token)}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-400 hover:text-amber-400 transition-colors px-3 py-1.5 bg-stone-800 rounded-lg border border-white/6 hover:border-amber-400/30"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-400 hover:text-stone-800 transition-colors px-3 py-1.5 bg-white rounded-lg border border-stone-200 hover:border-stone-400"
             >
               <Download size={11} /> İndir
             </button>

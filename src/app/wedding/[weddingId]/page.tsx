@@ -29,10 +29,7 @@ export default async function CoupleDashboardPage({ params }: Props) {
       .eq('wedding_id', weddingId)
       .eq('is_active', true)
       .order('created_at', { ascending: false }),
-    supabase
-      .from('favorites')
-      .select('media_file_id')
-      .eq('user_id', user.id),
+    supabase.from('favorites').select('media_file_id').eq('user_id', user.id),
   ])
 
   const wedding = weddingRes.data
@@ -58,83 +55,67 @@ export default async function CoupleDashboardPage({ params }: Props) {
   const totalPhotos = (allMedia ?? []).length
 
   return (
-    <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 space-y-6">
+    <div className="max-w-4xl mx-auto px-4 md:px-8 py-8 space-y-1">
 
-      {/* Hero card */}
-      <div className="relative bg-stone-900 rounded-3xl border border-white/6 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,#1c1408_0%,transparent_60%)] pointer-events-none" />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/4 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative px-7 pt-8 pb-6">
-          <p className="text-amber-400 text-[10px] font-semibold tracking-widest uppercase mb-3">
-            ✦ Düğün Galerisi
-          </p>
-          <h1 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-6">
-            {wedding?.bride_name && wedding?.groom_name
-              ? `${wedding.bride_name} & ${wedding.groom_name}`
-              : wedding?.title ?? 'Düğünüm'}
-          </h1>
-
-          <div className="flex flex-wrap items-center gap-5 pt-5 border-t border-white/5">
-            {wedding?.event_date && (
-              <div className="flex items-center gap-2 text-stone-400 text-sm">
-                <Calendar size={13} className="text-amber-400 shrink-0" />
-                {new Date(wedding.event_date).toLocaleDateString('tr-TR', {
-                  day: 'numeric', month: 'long', year: 'numeric',
-                })}
-              </div>
-            )}
-            {wedding?.venue && (
-              <div className="flex items-center gap-2 text-stone-400 text-sm">
-                <MapPin size={13} className="text-amber-400 shrink-0" />
-                {wedding.venue}
-              </div>
-            )}
-            <div className="flex items-center gap-2 text-stone-500 text-sm ml-auto">
-              <Images size={13} className="text-stone-600 shrink-0" />
-              {totalPhotos} fotoğraf
+      {/* Hero — full-width editorial banner */}
+      <div className="pt-6 pb-10 border-b border-stone-100">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-stone-400 mb-4">Düğün Galerisi</p>
+        <h1 className="font-serif text-5xl md:text-6xl text-stone-950 leading-none mb-6">
+          {wedding?.bride_name && wedding?.groom_name
+            ? `${wedding.bride_name} & ${wedding.groom_name}`
+            : wedding?.title ?? 'Düğünüm'}
+        </h1>
+        <div className="flex flex-wrap items-center gap-6">
+          {wedding?.event_date && (
+            <div className="flex items-center gap-2 text-stone-400 text-sm">
+              <Calendar size={13} className="shrink-0" />
+              {new Date(wedding.event_date).toLocaleDateString('tr-TR', {
+                day: 'numeric', month: 'long', year: 'numeric',
+              })}
             </div>
+          )}
+          {wedding?.venue && (
+            <div className="flex items-center gap-2 text-stone-400 text-sm">
+              <MapPin size={13} className="shrink-0" />
+              {wedding.venue}
+            </div>
+          )}
+          <div className="flex items-center gap-2 text-stone-300 text-sm ml-auto">
+            <Images size={13} className="shrink-0" />
+            {totalPhotos} fotoğraf
           </div>
         </div>
       </div>
 
       {/* QR Kodlar */}
       {tokens.length > 0 && (
-        <section className="bg-stone-900 rounded-3xl border border-white/6 overflow-hidden">
-          <div className="flex items-center justify-between px-7 py-5 border-b border-white/5">
+        <section className="py-8 border-b border-stone-100">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="font-serif text-lg text-white">Misafir QR Kodları</h2>
-              <p className="text-xs text-stone-500 mt-0.5">
-                Bu kodları misafirlerinizle paylaşın — fotoğraf yüklesinler
-              </p>
+              <h2 className="font-serif text-2xl text-stone-900">Misafir QR Kodları</h2>
+              <p className="text-xs text-stone-400 mt-1">Misafirlerinize paylaşın — fotoğraf yüklesinler</p>
             </div>
-            <div className="w-9 h-9 bg-amber-400/10 border border-amber-400/20 rounded-xl flex items-center justify-center">
-              <QrCode size={16} className="text-amber-400" />
-            </div>
+            <QrCode size={18} className="text-stone-200" />
           </div>
-          <div className="px-7 py-5">
-            <CoupleQrList tokens={tokens} albums={albums} appUrl={appUrl} />
-          </div>
+          <CoupleQrList tokens={tokens} albums={albums} appUrl={appUrl} />
         </section>
       )}
 
       {/* Fotoğraflar */}
-      <section className="bg-stone-900 rounded-3xl border border-white/6 overflow-hidden">
-        <div className="flex items-center justify-between px-7 py-5 border-b border-white/5">
+      <section className="py-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="font-serif text-lg text-white">Fotoğraflar</h2>
-            <p className="text-xs text-stone-500 mt-0.5">
+            <h2 className="font-serif text-2xl text-stone-900">Fotoğraflar</h2>
+            <p className="text-xs text-stone-400 mt-1">
               {totalPhotos > 0 ? `${totalPhotos} fotoğraf · ${albums.length} albüm` : 'Henüz fotoğraf yok'}
             </p>
           </div>
         </div>
-        <div className="px-7 py-6 space-y-8">
-          <CoupleGallerySection
-            albums={albumsWithMedia}
-            favSet={favSet}
-            weddingId={weddingId}
-          />
-        </div>
+        <CoupleGallerySection
+          albums={albumsWithMedia}
+          favSet={favSet}
+          weddingId={weddingId}
+        />
       </section>
 
     </div>

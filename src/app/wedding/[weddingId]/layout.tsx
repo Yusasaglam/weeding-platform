@@ -31,7 +31,7 @@ export default async function WeddingLayout({ children, params }: Props) {
     .single()
 
   return (
-    <div className="min-h-screen bg-stone-950">
+    <div className="min-h-screen bg-white">
       <CoupleNav wedding={wedding} weddingId={weddingId} logoutAction={logout} />
       <main className="pb-24 md:pb-8">
         {children}
